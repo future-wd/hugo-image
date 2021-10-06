@@ -279,10 +279,10 @@
         {{- end -}}
         {{- /* 1x, 2x, resizing */ -}}
         {{- if or (eq $layout "fixed") (eq $layout "intrinsic") -}}
-        {{- $srcset = $srcset | append (printf "%s %dx" $resize.Permalink (add 1 $resIndex)) -}}
+        {{- $srcset = $srcset | append (printf "%s %dx" $resize.RelPermalink (add 1 $resIndex)) -}}
         {{- else if eq $layout (or "responsive" "fill") -}}
         {{- /* array of widths for responsive/fill */ -}}
-        {{- $srcset = $srcset | append (printf "%s %dw" $resize.Permalink $resWidth) -}}
+        {{- $srcset = $srcset | append (printf "%s %dw" $resize.RelPermalink $resWidth) -}}
         {{- end -}}
       {{- end -}}
       {{- /* end width resizing range */ -}}
@@ -419,9 +419,9 @@
         {{- end -}}
       {{ end -}}
       {{- if and $lazyLibrary $dataSrc -}}
-    data-src="{{ $single.Permalink }}"
+    data-src="{{ $single.RelPermalink }}"
       {{- else -}}
-    src="{{ $single.Permalink }}"
+    src="{{ $single.RelPermalink }}"
       {{- end -}}
     width="{{ $single.Width }}"
     height="{{ $single.Height }}"
@@ -444,7 +444,7 @@
     style="{{- $.style | safeCSS -}} {{ $imgStyle | safeCSS -}}"
     decoding="async"
     loading="auto"
-    src="{{ .Permalink }}"
+    src="{{ .RelPermalink }}"
     width="{{ .Width }}"
     height="{{ .Height }}" />
 {{ end -}}
