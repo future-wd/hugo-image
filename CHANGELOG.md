@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](/github.com/powerfulweb/hugo-image/compare/v0.1.1...v0.1.2) (2021-10-06)
+
+
+### Bug Fixes
+
+* update gaussian blur ([b414ca1](/github.com/powerfulweb/hugo-image/commit/b414ca11f616b57ec9db98972f0971e6f11ecf8d))
+
 ### [0.1.1](/github.com/powerfulweb/hugo-image/compare/v0.1.0...v0.1.1) (2021-10-02)
 
 ### [0.0.10](/github.com/powerfulweb/hugo-image/compare/v0.0.9...v0.0.10) (2021-09-30)
