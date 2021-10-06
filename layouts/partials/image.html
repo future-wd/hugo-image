@@ -215,14 +215,12 @@
     {{- $widths = $widths | append (mul $.width . ) -}}
   {{- end -}}
 {{- end -}}
-
 {{- /* 
   Add URL for each width to $imgMap variable
   format: "/path/img_1000.jpg 1000w,/path/img_500.jpg 500w"
   Note: the first URL is used as "fallback" src in $single.
 */ -}}
 {{- /*  initialise imgArray and populate with srcset */ -}}
-
 {{- $sourceMap := dict -}}
 {{- if $src -}}
   {{- range $format := $formats -}}
@@ -327,7 +325,7 @@
   {{- else if eq $placeholder "blur" -}}
     {{- /* blur (default) */ -}}
     {{- $placeholder = $output.Resize "32x gif" -}}
-    {{- $placeholder = $placeholder.Filter (images.GaussianBlur 4) -}}
+    {{- $placeholder = $placeholder.Filter (images.GaussianBlur 6) -}}
   {{- end -}}
   {{- $placeholder = printf "background-image: url(data:%s;base64,%s);background-size:cover;" $placeholder.MediaType ($placeholder.Content | base64Encode) -}}
 {{- end -}}
