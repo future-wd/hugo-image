@@ -1,0 +1,40 @@
+.image {
+  &__responsive {
+    width: 100%;
+    height: auto;
+  }
+
+  &__fixed {
+    //empty
+  }
+
+  &__intrinsic {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__fill {
+    height:100%;
+    width:100%;
+  }
+
+  &__object-fit {
+    @each $fit in fill, contain, cover, none, scale-down {
+      &--#{$fit} {
+        object-fit: $fit;
+      }
+    }
+  }
+  &__object-position {
+    @each $x in left, center, right {
+      @each $y in top, center, bottom {
+        &--#{$x}-#{$y} {
+          object-position: $x $y;
+        }
+      }
+    }
+  }
+  
+}
+
+

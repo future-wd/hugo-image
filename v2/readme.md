@@ -125,11 +125,11 @@ see <https://gohugo.io/content-management/image-processing/#rotate>
 
 ### class
 
-A single class can be provided as a string otherwise a slice of class strings e.g. (slice "class1" "class2")
+String of space separated classes for parent div/figure
 
 ### style
 
-String of inline CSS styles for the image. Not recommended and cannot be used if content-security-policy (CSP) headers have been set.
+String of inline CSS styles for the image
 
 ### data
 
@@ -190,7 +190,7 @@ options are fill, contain, cover, none, scale-down
 
 ### objectPosition
 
-can be a combination of left/center/right and top/center/bottom e.g. left-top. Otherwise create your own class with .class
+can be a combination of left/center/right and top/center/bottom e.g. left-top
 
 ## Optional Parameters - fixed/intrinsic layout
 

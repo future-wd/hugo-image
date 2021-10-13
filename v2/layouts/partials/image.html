@@ -1,0 +1,486 @@
+{{- $temp := "assigned" -}}
+{{- /*  local scratch  */ -}}
+{{ $scratch := newScratch }}
+{{- /* check if .src is a page resource */ -}}
+{{- $src := .page.Resources.GetMatch (printf "**%s*" .src) -}}
+{{- /* temp class integrate into lazy library below later */ -}}
+{{- $lazyClass := "image--lazyload" -}}
+{{- /*
+  * Lazy Library e.g. lazysizes params config
+  */ -}}
+{{- /*  enable JS lazy load library  */ -}}
+{{- $lazyLibrary := false -}}
+{{- if .lazyLibrary -}}
+  {{- $lazyLibrary = true -}}
+{{- else if site.Params.image.lazyLibrary.enabled -}}
+  {{- $lazyLibrary = true -}}
+{{- end -}}
+
+{{- /*  replaces srcset with data-srcset if loading == "lazy"   */ -}}
+{{- $dataSrcset := site.Params.image.lazyLibrary.dataSrcset | default true -}}
+{{- /*  replaces src with data-src if loading == "lazy"   */ -}}
+{{- $dataSrc := site.Params.image.lazyLibrary.dataSrc | default true -}}
+{{- /*  replaces sizes with data-sizes="auto"  */ -}}
+{{- $dataSizes := site.Params.image.lazyLibrary.dataSizes | default true -}}
+{{- /*  add a css class for lazyload library e.g. "lazyload" */ -}}
+{{- $lazyLibraryImageClass := site.Params.image.lazyLibrary.imageClass | default "lazyload" -}}
+{{- /*  inline style for the img tag  */ -}}
+{{- $lazyLibraryImageStyle := site.Params.image.lazyLibrary.imageStyle | default "display:block;width:100%;" -}}
+{{- /*  inline style for the figure tag  */ -}}
+{{- $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle | default "display:block!important;" -}}
+{{- /*  enable noscript tag  */ -}}
+{{- $lazyLibraryNoscript := site.Params.image.lazyLibrary.noscript | default false -}}
+{{- /*
+  * Figure display params config
+  */ -}}
+{{- /*  set class for figure tag */ -}}
+{{- $figureClass := site.Params.image.figure.class | default "figure" }}
+{{- /*  set class for figure title tag */ -}}
+{{- $titleClass := site.Params.imgage.figure.titleClass | default "h4" }}
+{{- /*  set class which is appended to figure image */ -}}
+{{- $figureImageClass := site.Params.image.figure.imageClass | default "figure-img" }}
+{{- /*  set class for figcaption tag */ -}}
+{{- $figcaptionClass := site.Params.imgage.figure.figcaptionClass | default "figure-caption" }}
+{{- /*  set class for figure attribute link tag */ -}}
+{{- $attrLinkClass := site.Params.imgage.figure.attrLinkClass | default "" }}
+{{- /*
+  * Image params config
+  */ -}}
+{{- /*  set class for image link tag */ -}}
+{{- $linkClass := site.Params.imgage.linkClass | default "" }}
+{{- /* set formats for image processing "original" does not change the image format and must included
+      as its used for the fallback img tag. Place formats in order of efficiency, not support, so that 
+      the browser will load the most efficient format. 
+      only image formats that hugo supports can be used see
+      https://gohugo.io/content-management/image-processing/#target-format 
+      currently 2/9/21 hugo supports jpg, png, tif, bmp, gif, webp
+      no AVIF support yet 
+      */ -}}
+{{- $formats := site.Params.image.formats | default (slice "webp" "original") -}}
+{{- /* check for title (required) */ -}}
+{{- if not .title -}}
+  {{- warnf "You need to set a title for the image using .title" -}}
+{{- end -}}
+{{- /* check for alt, else default to caption, then title */ -}}
+{{- $alt := "" -}}
+{{- with .alt -}}
+  {{- $alt = . -}}
+{{- else -}}
+  {{- if .caption -}}
+    {{- $alt = .caption | markdownify | plainify -}}
+  {{- else -}}
+    {{- $alt = $.title -}}
+  {{- end -}}
+{{- end -}}
+{{- /* sanitise .quality check for integer between 1-100 */ -}}
+{{- $quality := "" -}}
+{{- with .quality -}}
+  {{- if and (eq (printf "%T" .) "int") (and (ge . 1) (le 100 .))   -}}
+    {{- $quality = printf "q%d" . -}}
+  {{- else -}}
+    {{- errorf "Invalid .quality %q - must be integer of 1-100" . -}}
+  {{- end -}}
+{{- end -}}
+{{- /* sanitise .fillAnchor */ -}}
+{{- with .fillAnchor -}}
+  {{- $anchorValues = (slice "Center" "TopLeft" "Top" "TopRight" "Left" "Right" "BottomLeft" "Bottom" "BottomRight") -}}
+  {{- if not (in $anchorValues $.fillAnchor ) -}}
+    {{- errorf "Invalid .fillAnchor %q - valid options are %q." . (delimit $anchorValues ",") -}}
+  {{- end -}}
+{{- end -}}
+{{- /* sanitise .resampleFilter */ -}}
+{{- with .resampleFilter -}}
+  {{- $resampleValues := (slice "Box" "NearestNeighbor" "Linear" "Gaussian") -}}
+  {{- if not (in $resampleValues . ) -}}
+    {{- errorf "Invalid .resampleFilter %q - valid options are %q." . (delimit $resampleValues ",") -}}
+  {{- end -}}
+{{- end -}}
+{{- /* sanitise .layout */ -}}
+{{- /*  set default layout value */ -}}
+{{- $layout := "responsive" -}}
+{{- with .layout -}}
+  {{- $layoutValues := (slice "fixed" "intrinsic" "responsive" "fill" ) -}}
+  {{- if in $layoutValues . -}}
+    {{- $layout = . -}}
+  {{- else -}}
+    {{- errorf "Invalid .layout %q - valid options are %q." . (delimit $layoutValues ",") -}}
+  {{- end -}}
+{{- end -}}
+{{- /*  sanitize width, depends on .layout above */ -}}
+{{- /* .width only parsed if laout of intrinsic or fixed used and .width is <= the images width */ -}}
+{{- $width := 0 -}}
+{{- if or (eq $layout "fixed") (eq $layout "intrinsic") -}}
+  {{- if .width -}}
+    {{- if and (eq (printf "%T" $.width ) "int") (le $.width $src.Width) -}}
+      {{- $width = $.width -}}
+      {{- if gt $width (div $src.Width 2) -}}
+        {{- warnf ".width of %v is greater than half of source image with width %v. A 2x varient will not be generated." $.width $src.Width -}}
+      {{- end -}}
+    {{- else -}}
+      {{- errorf ".width of %v is not valid. Must be integer less than image width of %v. Ideally half the image width or less." $.width $src.Width -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf ".width must be provided if using .layout of fixed or intrinsic %q" .page.Path -}}
+  {{ end -}}
+{{- end -}}
+{{- /*  sanitize loading */ -}}
+{{- /*  define default loading  */ -}}
+{{- $loading := site.Params.image.loading | default "lazy" -}}
+{{- with .loading -}}
+  {{- $loadingValues := (slice "lazy" "eager" "auto" ) -}}
+  {{- if in $loadingValues . -}}
+    {{- if or (eq . "eager") (eq . "auto") -}}
+      {{- $loading = . -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf "Invalid .loading %q - valid options are %q." . (delimit $loadingValues ",") -}}
+  {{- end -}}
+{{- end -}}
+{{- /*    sanitize .hint hugo default is "photo" */ -}}
+{{- $hint := "" -}}
+{{- with .hint -}}
+  {{- $hintValues := (slice "picture" "photo" "drawing" "icon" "text" ) -}}
+  {{- if in $hintValues . -}}
+    {{- $hint = . -}}
+  {{- else -}}
+    {{- errorf "Invalid .loading %q - valid options are %q." . (delimit $hintValues ",") -}}
+  {{- end -}}
+{{- end -}}
+{{- /* validate rotate */ -}}
+{{- $rotate := "" -}}
+{{- with .rotate -}}
+  {{- if or (gt 0 .) (lt 360) -}}
+    {{- $rotate = printf "r%d" . -}}
+  {{- else -}}
+    {{- errorf ".rotate %q is not valid. Must be integer between 0-365" . -}}
+  {{- end -}}
+{{- end -}}
+{{- /*  validate fitHeight is smaller than the $src image */ -}}
+{{- if gt .fitHeight $src.Height -}}
+  {{- errorf ".fitHeight %q is not valid. Must be integer <= height of image" . -}}
+{{- end -}}
+{{- /* only calcuate responsive image withs if src image is to be responsive or fixed layout */ -}}
+{{- $widths := slice -}}
+{{- if or (eq $layout "responsive") (eq $layout "fill") -}}
+  {{- with .widths -}}
+    {{- $widths = . -}}
+  {{- else -}}
+    {{- /*  used for layout responsive/fill next/image */ -}}
+    {{- $deviceSizes := site.Params.image.deviceSizes | default (slice 576 720 960 1140 1320 1980 2640 3840) -}} 
+    {{- /* $deviceSizes := site.Params.image.deviceSizes | default (slice 640 750 828 1080 1200 1920 2048 3840) */ -}}
+    {{- /*  used for layout fixed/intrinsic next/image  */ -}}
+    {{- $imageSizes := site.Params.image.imageSizes | default (slice 16 32 48 64 96 128 256 384) -}}  
+    {{- /* concatentate devicesize and imagesizes */ -}}
+    {{- $widths = $imageSizes | append $deviceSizes -}}
+    {{- /* sort in descending order so largest size (first) can be captured easily on resize */ -}}
+    {{- $widths = sort $widths "value" "desc" | uniq -}}
+    {{- /* set default min image width for full screen mobile */ -}}
+    {{- $minWidth := site.Params.image.minWidth | default 576 -}}
+    {{- /* alter $minWidth if .minWidth is specified */ -}}
+    {{- with $.minWidth -}}
+      {{- $minWidth = . -}}
+      {{- if gt . $minWidth -}}
+        {{- warnf ".minWidth %v is greater than the preset minimum image width of %v" $.minWidth $minWidth -}}
+      {{- else if gt  . (delimit (last 1 $widths) "") -}}
+        {{- errorf ".minWidth %v is greater than largest image width of %v" $.minWidth (delimit (last 1 $widths) "") -}}
+      {{- end -}}
+    {{- end -}}
+    {{- /* remove widths smaller than $minWidth */ -}}
+    {{- $tempWidths := slice -}}
+    {{- range $widths -}}
+      {{- if ge . $minWidth -}}
+        {{- $tempWidths = $tempWidths | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $widths = $tempWidths -}}
+    {{- /* set default maximum width */ -}}
+    {{ $maxWidth := site.Params.image.maxWidth | default 1980 -}}
+    {{- /* alter $maxWidth if its greater than the smallest integer in $widths array */ -}}
+    {{ with .maxWidth -}}
+      {{- if le . $minWidth -}}
+        {{- errorf ".maxWidth of %v is lower than the smallest image width of %v" $.maxWidth (index $widths 0) -}}
+      {{- else -}}
+        {{- $maxWidth = $.maxWidth -}}
+      {{- end -}}
+    {{- end -}}
+    {{- /* remove widths larger than $maxWidth */ -}}
+    {{- $tempWidths = slice -}}
+    {{- range $widths -}}
+      {{- if le . $maxWidth -}}
+        {{- $tempWidths = $tempWidths | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $widths = $tempWidths -}}
+  {{- end -}}
+{{- else if or (eq $layout "fixed") (eq $layout "intrinsic") -}}
+  {{- /* widths for high density displays */ -}}
+  {{- $densityWidths := (slice 1 2) -}}
+  {{- $widths = slice -}}
+  {{- range $densityWidths -}}
+    {{- $widths = $widths | append (mul $.width . ) -}}
+  {{- end -}}
+{{- end -}}
+{{- /* 
+  Add URL for each width to $imgMap variable
+  format: "/path/img_1000.jpg 1000w,/path/img_500.jpg 500w"
+  Note: the first URL is used as "fallback" src in $single.
+*/ -}}
+{{- /*  initialise imgArray and populate with srcset */ -}}
+{{- $sourceMap := dict -}}
+{{- if $src -}}
+  {{- range $format := $formats -}}
+    {{- /* set $format to the media's sub type if "original" */ -}}
+    {{- if eq $format "original" -}}
+      {{- $format = $src.MediaType.SubType -}}
+    {{- end -}}
+    {{- /* only pass $hint if format is "webp" */ -}}
+    {{- if eq $format "webp" -}}
+      {{- $hint = $.hint -}}
+    {{- end -}}
+    {{- /* only pass $quality if format is "webp" or "jpg" */ -}}
+    {{- if or (ne $format "webp") (ne $format "jpeg") -}}
+      {{- $quality = "" -}}
+    {{- end -}}
+    {{- /*  initialise srcset, img and imgMap. They are cleared for each format */ -}}  
+    {{- $srcset := slice -}}
+    {{- $imgMap := dict -}}
+    {{- $single := "" -}}
+    {{- range $resIndex, $resWidth := $widths -}} 
+      {{- /*  only if src image is equal or greater than resize width  */ -}}
+      {{- if ge $src.Width $resWidth -}}    
+        {{- $resize := "" -}}
+        {{- /*  set/calculate $fillHeight. fill ratio takes presedence */ -}}
+        {{- $fillHeight := 0 -}}
+        {{- if $.fillRatio -}}
+          {{- /* provided numbers in ratio array must be converted to float so that division is 
+          accurate and doesnt result in rounding down to 0 */ -}}
+          {{- $fillRatio := div (index $.fillRatio 1 | float) (index $.fillRatio 0 | float) -}}
+          {{- /* resulting fillHeight must be converted to integer for use with image resize */ -}}
+          {{- $fillHeight = mul $resWidth $fillRatio | int -}}
+        {{- else if and $.fillHeight (or (eq $layout "fixed") (eq $layout "intrinsic")) -}}
+          {{- $fillHeight = ($.fillHeight ) -}}
+        {{- end -}}
+        {{- /*  set/calculate $fitHeight. fit ratio takes presedence */ -}}
+        {{- $fitHeight := 0 -}}
+        {{- if $.fitRatio -}}
+          {{- /* see above for int/float info */ -}}
+          {{- $fitRatio := div (index $.fitRatio 1 | float) (index $.fitRatio 0 | float) -}}
+          {{- $fitHeight = mul $resWidth $fitRatio | int -}}
+        {{- else if and $.fitHeight (or (eq $layout "fixed") (eq $layout "intrinsic")) -}}
+          {{- $fitHeight = $.fitHeight -}}
+        {{- end -}}
+        {{- if $fillHeight -}}
+          {{- $resize = $src.Fill (printf "%vx%v %s %s %s %s %s %s %s" $resWidth $fillHeight $quality $format $hint $rotate $.bgColor $.resampleFilter $.fillAnchor) -}}
+        {{- else if $fitHeight -}}
+          {{- $resize = $src.Fit (printf "%vx%v %s %s %s %s %s %s %s"  $resWidth $fitHeight $quality $format $hint $rotate $.bgColor $.resampleFilter) -}}
+        {{- else -}}
+          {{- $resize = $src.Resize (printf "%dx %s %s %s %s %s %s"    $resWidth             $quality $format $hint $rotate $.bgColor $.resampleFilter) -}}
+        {{- end -}}
+        
+        {{- if eq $single "" -}}
+          {{- /*  first(largest size) of this format becomes a singular image */ -}}
+          {{- $single = $resize -}}
+          {{- $imgMap = merge $imgMap (dict "single" $single) -}}
+        {{- end -}}
+        {{- /* 1x, 2x, resizing */ -}}
+        {{- if or (eq $layout "fixed") (eq $layout "intrinsic") -}}
+        {{- $srcset = $srcset | append (printf "%s %dx" $resize.RelPermalink (add 1 $resIndex)) -}}
+        {{- else if eq $layout (or "responsive" "fill") -}}
+        {{- /* array of widths for responsive/fill */ -}}
+        {{- $srcset = $srcset | append (printf "%s %dw" $resize.RelPermalink $resWidth) -}}
+        {{- end -}}
+      {{- end -}}
+      {{- /* end width resizing range */ -}}
+    {{- end -}}
+    {{- /* change array into string delimited by , */ -}}
+    {{- $srcset = delimit $srcset "," -}}
+    {{- /* add $srcset string to $imgMap */ -}}
+    {{- $imgMap = merge $imgMap (dict "srcset" $srcset) -}}
+    {{- /* add $imgMap of current image format to $sourceMap */ -}}
+    {{- $sourceMap = merge $sourceMap (dict . $imgMap) -}}
+  {{- end -}}
+{{- end -}}
+{{- /*
+  *
+  * Placeholder 
+  *
+  */ -}}
+{{- /*  sanitise and process placeholder */ -}}
+{{- /*  set default placeholder */ -}}
+{{- /*  this needs to be conditional on $src and alternatives put in place */ -}}
+{{- $placeholder := site.Params.image.placeholder | default "blur" -}}
+{{- if .placeholder -}}
+  {{- $placeholderValues := (slice "blur" "solid" "empty") -}}
+  {{- if in $placeholderValues .placeholder -}}
+    {{- $placeholder = .placeholder -}}
+  {{- else -}}
+    {{- errorf "Invalid .placeholder %q - valid options are %q" . (delimit $placeholderValues ", ") -}}
+  {{- end -}}
+{{- end -}}
+{{- /* get the width and height of the outputted image for placeholders */ -}}
+{{- $output := $sourceMap.original.single -}}
+{{- $outputWidth := $output.Width -}}
+{{- $outputHeight := $output.Height -}}
+{{- /*  set placeholder  */ -}}
+{{- if eq $placeholder "empty" -}}
+  {{- $placeholder = "" -}}
+{{- else -}}
+  {{- if eq $placeholder "solid" -}}
+    {{- $placeholder = $output.Resize "1x gif" -}}
+  {{- else if eq $placeholder "blur" -}}
+    {{- /* blur (default) */ -}}
+    {{- $placeholder = $output.Resize "32x gif" -}}
+    {{- $placeholder = $placeholder.Filter (images.GaussianBlur 6) -}}
+  {{- end -}}
+  {{- $placeholder = printf "background-image: url(data:%s;base64,%s);background-size:cover;" $placeholder.MediaType ($placeholder.Content | base64Encode) -}}
+{{- end -}}
+
+{{- /*  set class scratch to array/slice */ -}}
+{{ $scratch.Set "class" slice }}
+{{- /*  add lazyload class */ -}}
+{{- $scratch.Add "class" $lazyClass -}}
+{{- /* add .class if its a slice, otherwise add (slice .class) */ -}}
+{{- if .class -}}
+  {{- if reflect.IsArray .class -}}
+    {{- $scratch.Add "class" .class -}}
+  {{- else -}}
+    {{- $scratch.Add "class" (slice .class) -}}
+  {{- end -}}
+{{- end -}}
+{{- /* add related BEM image classes */ -}}
+{{- $scratch.Add "class" (slice (printf "image__%s" $layout)) -}}
+{{- if eq $layout "fill" -}}
+  {{- $objectFit := "cover" -}}
+  {{- with .objectFit -}}
+    {{- $objectFit = . -}}
+  {{- end -}}
+  {{- $scratch.Add "class" (slice (printf "image__object-fit--%s" $objectFit)) -}}
+  {{- with .objectPosition -}}
+    {{- $objectPosition = "object-position:%d;" . -}}
+    {{- $scratch.Add "class" (slice (printf "image__object-position--%s" $objectPosition)) -}}
+  {{- end }}
+{{- end -}}
+{{- /* delimit scratch.class into space separated string */ -}}
+{{- $class := $scratch.Get "class" -}}
+{{- $class = delimit $class " " -}}
+
+{{- /*  
+  * OUTPUT HTML  
+  */ -}}
+{{- if .figure -}}
+<figure class="{{ $figureClass }}" style="{{ if $lazyLibrary }}{{ $lazyLibraryFigureStyle }}{{ end }}">
+{{- end -}}  
+{{ with .link -}}
+  <a href="{{ . }}" {{ with $.target }}target="{{ . }}"{{ end }} {{ with $.rel }}rel="{{ . }}"{{ end }} {{ with $linkClass }}class="{{ . }}"{{ end }}>
+{{- end -}}
+<picture>
+{{- if $src -}}
+  {{- range $format, $map := $sourceMap -}}
+    {{ $single := index $map "single" -}}
+    {{ $srcset := index $map "srcset" }}
+    {{- /* this line below removes the original format from the sources */ -}}
+    {{- if ne $format "original" }}
+    <source type="{{ $single.MediaType }}"
+    {{- if and $lazyLibrary (and $dataSrcset (eq $.loading "lazy" ) ) -}} 
+    data-srcset="{{ $srcset }}"
+    {{- else -}}
+    srcset="{{ $srcset }}"
+    {{ end -}}
+    {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
+    {{- if or (eq $layout "responsive") (eq $layout "fill") }}
+      {{- if and $lazyLibrary $dataSizes -}}
+        data-sizes="auto"
+      {{- else -}}
+        sizes="{{ $.sizes | default "100vw" }}"
+      {{- end -}}
+    {{ end -}}>
+      {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- with $sourceMap.original -}}
+  {{- $single := index . "single" -}}
+  {{- $srcset := index . "srcset" -}}
+  <img 
+    alt="{{ $alt }}" 
+    title="{{ $.title }}"
+    {{ if or (and $lazyLibrary $lazyLibraryImageClass) $class }}
+      class="{{ if $lazyLibrary }}{{ $lazyLibraryImageClass }} {{ end }} {{- $class }}" 
+    {{ end -}}
+    style="{{- $.style | safeCSS -}}{{- $placeholder | safeCSS -}}"
+    decoding="async"
+    {{- if and (not $lazyLibrary) (not $dataSrcset) }}
+    loading="{{ $loading }}"
+    {{- end -}}
+    {{ $.data | safeHTMLAttr -}}
+    {{- /* only include resized images if they are from a resource bundle */ -}}
+    {{ if $src -}}
+      {{- if and $lazyLibrary (and $dataSrcset (eq $.loading "lazy" ) ) -}} 
+      data-srcset="{{ $srcset }}"
+      {{- else -}}
+      srcset="{{ $srcset }}"
+      {{ end -}}
+      {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
+      {{- if or (eq $layout "responsive") (eq $layout "fill") }}
+        {{- if and $lazyLibrary $dataSizes -}}
+          data-sizes="auto"
+        {{- else -}}
+          sizes="{{ $.sizes | default "100vw" }}"
+        {{- end -}}
+      {{ end -}}
+      {{- if and $lazyLibrary $dataSrc -}}
+    data-src="{{ $single.RelPermalink }}"
+      {{- else -}}
+    src="{{ $single.RelPermalink }}"
+      {{- end -}}
+    width="{{ $single.Width }}"
+    height="{{ $single.Height }}"
+    {{ else }}
+      {{- /* fall back to stock hugo behaviour when image is not available in bundle */ -}}
+    src="{{ .src }}"
+    {{ end -}} />
+{{ end -}}
+</picture>
+{{ if and $lazyLibrary $lazyLibraryNoscript -}}
+<noscript>  
+  {{- /* no srcset is used, as it is assumed that browser without JS does not support srcset. Only for use with lazyload library */ -}}
+  {{- with $sourceMap.original.single -}}
+  <img 
+    alt="{{ $alt }}" 
+    title="{{ $.title }}"
+    class="{{ $class }}"
+    style="{{- $.style | safeCSS -}}"
+    decoding="async"
+    loading="auto"
+    src="{{ .RelPermalink }}"
+    width="{{ .Width }}"
+    height="{{ .Height }}" />
+{{ end -}}
+</noscript>
+{{ end -}}
+{{- if .link }}</a>{{ end -}}
+{{ if .figure -}}
+  <figcaption class="{{ .figcaptionClass | default $figcaptionClass }}">
+    {{ with .title -}}
+    <div class="{{ .titleClass | default $titleClass }}">{{ . }}</div>
+    {{- end -}}
+    {{- if or .caption .attr -}}
+    <p>
+      {{- .caption | markdownify -}}
+      {{- with .attrLink }}
+      <a href="{{ . }}" class="{{ .attrLinkClass | default $attrLinkClass }}">
+      {{- end -}}
+      {{- .attr | markdownify -}}
+      {{- if .attrLink }}</a>{{ end }}
+    </p>
+    {{- end }}
+  </figcaption>
+</figure>
+{{ end -}}
+
+
+
+
+
+
+
+
