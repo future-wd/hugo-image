@@ -292,10 +292,8 @@
 {{- /*  this needs to be conditional on $src and alternatives put in place */ -}}
 {{- $placeholder := .placeholder | default site.Params.image.placeholder.style -}}
 {{- $placeholderValues := (slice "blur" "solid" "empty" "color") -}}
-{{- if in $placeholderValues $placeholder -}}
-  {{- $placeholder = .placeholder -}}
-{{- else -}}
-  {{- errorf "Invalid .placeholder %q - valid options are %q" . (delimit $placeholderValues ", ") -}}
+{{- if not (in $placeholderValues $placeholder) -}}
+  {{- errorf "Invalid .placeholder %q - valid options are %q" $placeholder (delimit $placeholderValues ", " " and ") -}}
 {{- end -}}
 {{- /*  set placeholder  */ -}}
 {{- if eq $placeholder "empty" -}}
