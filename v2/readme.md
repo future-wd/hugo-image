@@ -202,7 +202,9 @@ Not set by default - Provide hugo with the desired height for scaling. The image
 
 Provide hugo with the desired height for scaling. Aspect ratio will be maintained. If the aspect ratio of the image does not match the ratio of .width and .fitHeight, one edge of the image will be shorter than the defined size, to maintain the aspect ratio.
 
-## Optional Parameters - Image link
+## Optional Parameters - Image link 
+
+Link is most useful for figures, so that you are only linking the image component of the figure. Otherwise its generally easier to link manually with HTML.
 
 ### link
 
@@ -212,15 +214,15 @@ None of the options below will work if `link` has not been set.
 
 ### linkClass
 
-Not enabled by default. Classes (string with spaces) for `<a>` tag. Separate multiple classes with spaces e.g. "link-primary bg-secondary"`.
+Default is "" can be set in params Classes (string with spaces) for `<a>` tag. Separate multiple classes with spaces e.g. "link-primary bg-secondary"`.
 
-### target
+### linkTarget
 
-Not enabled by default. Options are  `"_self"` (the browser default), `"_blank"`, `"_parent"`, `"_top"`, `"framename"`.
+Default is "" can be set in params Options are  `"_self"` (the browser default), `"_blank"`, `"_parent"`, `"_top"`, `"framename"`.
 
-### rel
+### linkRel
 
-Not set by default. Example options are `"noopener"`, `"nofollow"`, "`noreferrer`". Separate multiple values with spaces e.g. `"noopener nofollow"'.
+Default is "" can be set in params Example options are `"noopener"`, `"nofollow"`, "`noreferrer`". Separate multiple values with spaces e.g. `"noopener nofollow"'.
 
 ## Optional Parameters - Figure
 
