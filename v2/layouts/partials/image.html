@@ -316,7 +316,8 @@
 
 {{- if eq site.Params.image.placeholder.type "css" -}}
 {{- end -}}
-{{- $uniqueID := 0 -}}
+{{- $uniqueID := delimit (shuffle (split (md5 $src.Content) "" )) "" -}}
+{{ $uniqueID }}
 
 {{- /*  set class scratch to array/slice */ -}}
 {{ $scratch.Set "class" slice }}
