@@ -202,7 +202,9 @@ Not set by default - Provide hugo with the desired height for scaling. The image
 
 Provide hugo with the desired height for scaling. Aspect ratio will be maintained. If the aspect ratio of the image does not match the ratio of .width and .fitHeight, one edge of the image will be shorter than the defined size, to maintain the aspect ratio.
 
-## Optional Parameters - Image link
+## Optional Parameters - Image link 
+
+Link is most useful for figures, so that you are only linking the image component of the figure. Otherwise its generally easier to link manually with HTML.
 
 ### link
 
@@ -212,15 +214,15 @@ None of the options below will work if `link` has not been set.
 
 ### linkClass
 
-Not enabled by default. Classes (string with spaces) for `<a>` tag. Separate multiple classes with spaces e.g. "link-primary bg-secondary"`.
+Default is "" can be set in params Classes (string with spaces) for `<a>` tag. Separate multiple classes with spaces e.g. "link-primary bg-secondary"`.
 
-### target
+### linkTarget
 
-Not enabled by default. Options are  `"_self"` (the browser default), `"_blank"`, `"_parent"`, `"_top"`, `"framename"`.
+Default is "" can be set in params Options are  `"_self"` (the browser default), `"_blank"`, `"_parent"`, `"_top"`, `"framename"`.
 
-### rel
+### linkRel
 
-Not set by default. Example options are `"noopener"`, `"nofollow"`, "`noreferrer`". Separate multiple values with spaces e.g. `"noopener nofollow"'.
+Default is "" can be set in params Example options are `"noopener"`, `"nofollow"`, "`noreferrer`". Separate multiple values with spaces e.g. `"noopener nofollow"'.
 
 ## Optional Parameters - Figure
 
@@ -443,31 +445,8 @@ module:
 The first line can be omitted if using a params.yaml file. Defaults have been shown.
 
 ```YAML
-params:
-  image:
-    format: ["webp" "original"]
-    placeholder: blur
-    loading: lazy
-    minWidth: 500
-    maxWidth: 4000
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
-    linkClass: ""
-  figure:
-    class: figure
-    titleClass: h4
-    imageClass: figure-img
-    figcaptionClass: figure-caption
-    attrLinkClass: ""
-  lazyLibrary:
-    enabled: false
-    dataSrcSet: true
-    dataSrc: false
-    dataSizes: true
-    imageStyle: "display:block;width:100%;"
-    imageClass: lazysizes
-    figureStyle: "display:block!important;"
-    noscript: false
+
+to be updated
 
 ```
 
