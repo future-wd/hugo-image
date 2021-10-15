@@ -318,6 +318,7 @@
 
 {{- if eq site.Params.image.placeholder.type "css" -}}
 {{- end -}}
+{{- $uniqueID := 0 -}}
 
 {{- /*  set class scratch to array/slice */ -}}
 {{ $scratch.Set "class" slice }}
