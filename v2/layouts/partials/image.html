@@ -3,7 +3,6 @@
 {{- /* check if .src is a page resource */ -}}
 {{- $src := .page.Resources.GetMatch (printf "**%s*" .src) -}}
 {{- /* temp class integrate into lazy library below later */ -}}
-{{- $lazyClass := "image--lazyload" -}}
 {{- /*
   * Lazy Library e.g. lazysizes params config
   */ -}}
@@ -17,7 +16,10 @@
 {{- /*  replaces sizes with data-sizes="auto"  */ -}}
 {{- $dataSizes := site.Params.image.lazyLibrary.dataSizes  -}}
 {{- /*  add a css class for lazyload library e.g. "lazyload" */ -}}
-{{- $lazyLibraryImageClass := site.Params.image.lazyLibrary.imageClass  -}}
+{{- $lazyLibraryClass := site.Params.image.lazyLibrary.class  -}}
+{{- if reflect.IsSlice site.Params.image.lazyLibrary.class -}}
+  {{- $lazyLibraryClass := delimit site.Params.image.lazyLibrary.class " "  -}}
+{{- end -}}
 {{- /*  enable noscript tag  */ -}}
 {{- $lazyLibraryNoscript := site.Params.image.lazyLibrary.noscript  -}}
 {{- /*
@@ -324,7 +326,7 @@
 {{- /*  set class scratch to array/slice */ -}}
 {{ $scratch.Set "class" slice }}
 {{- /*  add lazyload class */ -}}
-{{- $scratch.Add "class" $lazyClass -}}
+{{- $scratch.Add "class" $lazyLibraryClass -}}
 {{- /* add .class if its a slice, otherwise add (slice .class) */ -}}
 {{- if .class -}}
   {{- if reflect.IsArray .class -}}

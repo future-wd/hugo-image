@@ -26,12 +26,12 @@ image:
     figcaptionClass: figure-caption
     attrLinkClass: ""
   lazyLibrary:
-    enabled: false
+    enabled: true  # to be removed
     dataSrcSet: true
-    dataSrc: false
+    dataSrc: true
     dataSizes: true
+    class: lazysizes # can be array/slice
     #  imageCSS: "display:block;width:100%;" # add to css, but configure here?
-    imageClass: lazysizes # option of array
     #  figureCSS: "display:block!important;" # add to css, but configure here? img.image and figure.[figure.class] (takes )
     # add to css 
     # $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle
