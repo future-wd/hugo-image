@@ -315,7 +315,7 @@
   {{ $src.RelPermalink}}
   {{- $placeholder = printf "data:image/gif;base64,%s" ($placeholder.Content | base64Encode) -}}
 {{- end -}}
-
+{{- /* generate inline placeholder style */ -}}
 {{- $inlinePlaceholder := ""}}
 {{- if and (eq site.Params.image.placeholder.type "inline") (or (eq site.Params.image.placeholder.style "solid") (eq site.Params.image.placeholder.style "blur") ) -}}
 {{- $inlinePlaceholder = printf "background-image: url(%s);background-size:cover;" $placeholder -}}
