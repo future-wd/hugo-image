@@ -25,6 +25,7 @@
       }
     }
   }
+
   &__object-position {
     @each $x in left, center, right {
       @each $y in top, center, bottom {
@@ -35,6 +36,18 @@
     }
   }
   
+  // &--lazyload {
+  //   opacity:0;
+  // }
+
+  // &--lazyloading {
+  //   opacity:0;
+  // }
+
+  // &--lazyloaded {
+  //   opacity: 1;
+  // }
+
 }
 
 
