@@ -1,4 +1,3 @@
-{{- $temp := "assigned" -}}
 {{- /*  local scratch  */ -}}
 {{ $scratch := newScratch }}
 {{- /* check if .src is a page resource */ -}}
@@ -54,7 +53,7 @@
       currently 2/9/21 hugo supports jpg, png, tif, bmp, gif, webp
       no AVIF support yet 
       */ -}}
-{{- $formats := site.Params.image.formats | default (slice "webp" "original") -}}
+{{- $formats := site.Params.image.formats -}}
 {{- /* check for title (required) */ -}}
 {{- if not .title -}}
   {{- warnf "You need to set a title for the image using .title" -}}
@@ -227,7 +226,7 @@
 {{- $sourceMap := dict -}}
 {{- if $src -}}
   {{- range $format := $formats -}}
-    {{- /* set $format to the media's sub type if "original" */ -}}
+    {{- /* set $format to the media's sub type if "original" e.g. original -> jpeg */ -}}
     {{- if eq $format "original" -}}
       {{- $format = $src.MediaType.SubType -}}
     {{- end -}}
@@ -236,17 +235,17 @@
       {{- $hint = $.hint -}}
     {{- end -}}
     {{- /* only pass $quality if format is "webp" or "jpg" */ -}}
-    {{- if or (ne $format "webp") (ne $format "jpeg") -}}
+    {{- if ne $format (or "webp" "jpeg") -}}
       {{- $quality = "" -}}
     {{- end -}}
     {{- /*  initialise srcset, img and imgMap. They are cleared for each format */ -}}  
     {{- $srcset := slice -}}
     {{- $imgMap := dict -}}
-    {{- $single := "" -}}
-    {{- range $resIndex, $resWidth := $widths -}} 
+   
+    {{- range $indexWidth, $width := $widths -}} 
       {{- /*  only if src image is equal or greater than resize width  */ -}}
-      {{- if ge $src.Width $resWidth -}}    
-        {{- $resize := "" -}}
+      {{- if ge $src.Width $width -}}   
+      {{- $resize := "blank" -}}
         {{- /*  set/calculate $fillHeight. fill ratio takes presedence */ -}}
         {{- $fillHeight := 0 -}}
         {{- if $.fillRatio -}}
@@ -254,7 +253,7 @@
           accurate and doesnt result in rounding down to 0 */ -}}
           {{- $fillRatio := div (index $.fillRatio 1 | float) (index $.fillRatio 0 | float) -}}
           {{- /* resulting fillHeight must be converted to integer for use with image resize */ -}}
-          {{- $fillHeight = mul $resWidth $fillRatio | int -}}
+          {{- $fillHeight = mul $width $fillRatio | int -}}
         {{- else if and $.fillHeight (or (eq $layout "fixed") (eq $layout "intrinsic")) -}}
           {{- $fillHeight = ($.fillHeight ) -}}
         {{- end -}}
@@ -263,29 +262,27 @@
         {{- if $.fitRatio -}}
           {{- /* see above for int/float info */ -}}
           {{- $fitRatio := div (index $.fitRatio 1 | float) (index $.fitRatio 0 | float) -}}
-          {{- $fitHeight = mul $resWidth $fitRatio | int -}}
+          {{- $fitHeight = mul $width $fitRatio | int -}}
         {{- else if and $.fitHeight (or (eq $layout "fixed") (eq $layout "intrinsic")) -}}
           {{- $fitHeight = $.fitHeight -}}
         {{- end -}}
         {{- if $fillHeight -}}
-          {{- $resize = $src.Fill (printf "%vx%v %s %s %s %s %s %s %s" $resWidth $fillHeight $quality $format $hint $rotate $.bgColor $.resampleFilter $.fillAnchor) -}}
+          {{- $resize = $src.Fill (printf "%vx%v %s %s %s %s %s %s %s %s" $width $fillHeight $quality $format $hint $rotate $.bgColor $.resampleFilter $.fillAnchor) -}}
         {{- else if $fitHeight -}}
-          {{- $resize = $src.Fit (printf "%vx%v %s %s %s %s %s %s %s"  $resWidth $fitHeight $quality $format $hint $rotate $.bgColor $.resampleFilter) -}}
+          {{- $resize = $src.Fit  (printf "%vx%v %s %s %s %s %s %s %s"    $width $fitHeight  $quality $format $hint $rotate $.bgColor $.resampleFilter) -}}
         {{- else -}}
-          {{- $resize = $src.Resize (printf "%dx %s %s %s %s %s %s"    $resWidth             $quality $format $hint $rotate $.bgColor $.resampleFilter) -}}
+          {{- $resize = $src.Resize (printf "%dx %s %s %s %s %s %s"       $width             $quality $format $hint $rotate $.bgColor $.resampleFilter) -}}
         {{- end -}}
-        
-        {{- if eq $single "" -}}
+        {{- if eq $indexWidth 0 -}}
           {{- /*  first(largest size) of this format becomes a singular image */ -}}
-          {{- $single = $resize -}}
-          {{- $imgMap = merge $imgMap (dict "single" $single) -}}
+          {{- $imgMap = merge $imgMap (dict "single" $resize) -}}
         {{- end -}}
         {{- /* 1x, 2x, resizing */ -}}
-        {{- if or (eq $layout "fixed") (eq $layout "intrinsic") -}}
-        {{- $srcset = $srcset | append (printf "%s %dx" $resize.RelPermalink (add 1 $resIndex)) -}}
+        {{- if eq $layout (or "fixed" "intrinsic") -}}
+        {{- $srcset = $srcset | append (printf "%s %dx" $resize.RelPermalink (add 1 $indexWidth)) -}}
         {{- else if eq $layout (or "responsive" "fill") -}}
         {{- /* array of widths for responsive/fill */ -}}
-        {{- $srcset = $srcset | append (printf "%s %dw" $resize.RelPermalink $resWidth) -}}
+        {{- $srcset = $srcset | append (printf "%s %dw" $resize.RelPermalink $width) -}}
         {{- end -}}
       {{- end -}}
       {{- /* end width resizing range */ -}}
@@ -295,7 +292,7 @@
     {{- /* add $srcset string to $imgMap */ -}}
     {{- $imgMap = merge $imgMap (dict "srcset" $srcset) -}}
     {{- /* add $imgMap of current image format to $sourceMap */ -}}
-    {{- $sourceMap = merge $sourceMap (dict . $imgMap) -}}
+    {{- $sourceMap = merge $sourceMap (dict $format $imgMap) -}}
   {{- end -}}
 {{- end -}}
 {{- /*
@@ -377,8 +374,8 @@
     {{ $single := index $map "single" -}}
     {{ $srcset := index $map "srcset" }}
     {{- /* this line below removes the original format from the sources */ -}}
-    {{- if ne $format "original" }}
-    <source type="{{ $single.MediaType }}"
+    {{- /* if ne $format $src.MediaType.SubType */}}
+    <source type="{{ printf "media/%s" $format }}"
     {{- if and $lazyLibrary (and $dataSrcset (eq $.loading "lazy" ) ) -}} 
     data-srcset="{{ $srcset }}"
     {{- else -}}
@@ -392,10 +389,10 @@
         sizes="{{ $.sizes | default "100vw" }}"
       {{- end -}}
     {{ end -}}>
-      {{- end -}}
+      {{- /* end */ -}}
   {{- end -}}
 {{- end -}}
-{{- with $sourceMap.original -}}
+{{- with index $sourceMap $src.MediaType.SubType -}}
   {{- $single := index . "single" -}}
   {{- $srcset := index . "srcset" -}}
   <img 
