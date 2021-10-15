@@ -125,7 +125,7 @@
 {{- end -}}
 {{- /*  sanitize loading */ -}}
 {{- /*  define default loading  */ -}}
-{{- $loading := site.Params.image.loading -}}
+{{- $loading := .loading | default site.Params.image.loading -}}
 {{- with .loading -}}
   {{- $loadingValues := (slice "lazy" "eager" "auto" ) -}}
   {{- if in $loadingValues . -}}
@@ -290,7 +290,7 @@
 {{- /*  sanitise and process placeholder */ -}}
 {{- /*  set default placeholder */ -}}
 {{- /*  this needs to be conditional on $src and alternatives put in place */ -}}
-{{- $placeholder := .placeholder | default site.Params.image.placeholder.style -}}
+{{- $placeholder := .placeholderStyle | default site.Params.image.placeholder.style -}}
 {{- $placeholderValues := (slice "blur" "solid" "empty" "color") -}}
 {{- if in $placeholderValues $placeholder -}}
   {{- $placeholder = .placeholder -}}
@@ -298,25 +298,27 @@
   {{- errorf "Invalid .placeholder %q - valid options are %q" . (delimit $placeholderValues ", ") -}}
 {{- end -}}
 {{- /*  set placeholder  */ -}}
-{{- if eq $placeholder "empty" -}}
+{{- $placeholderStyle := .placeholderStyle | default site.Params.image.placeholder.style -}}
+{{- $placeholderType := site.Params.image.placeholder.type -}}
+{{- if eq $placeholderStyle "empty" -}}
   {{- $placeholder = "" -}}
-
-{{- else if eq site.Params.image.placeholder.type "inline" -}}
+{{- /* generate solid and blur placeholder for js and inline use */ -}}
+{{- else if or (eq $placeholderType "js") (eq $placeholderType "inline") -}}
 {{- /* get the width and height of the outputted image for placeholders */ -}}
-  {{- with index $sourceMap $src.MediaType.SubType -}}
-    {{- $single := index . "single" -}}
-    {{- if eq $placeholder "solid" -}}
-      {{- $placeholder = $single.Resize "1x gif" -}}
-    {{- else if eq $placeholder "blur" -}}
-      {{- /* blur (default) */ -}}
-      {{- $placeholder = $single.Resize "32x gif" -}}
-      {{- $placeholder = $placeholder.Filter (images.GaussianBlur 6) -}}
-    {{- end -}}
-    {{- $placeholder = printf "background-image: url(data:%s;base64,%s);background-size:cover;" $placeholder.MediaType ($placeholder.Content | base64Encode) -}}
+  {{- if eq $placeholderStyle "solid" -}}
+    {{- $placeholder = $src.Resize "1x gif" -}}
+  {{- else if eq $placeholderStyle "blur" -}}
+    {{- $placeholder = $src.Resize (printf "%vx gif" site.Params.image.placeholder.blur.size) -}} 
+    {{- $placeholder = $placeholder.Filter (images.GaussianBlur site.Params.image.placeholder.blur.amount) -}}
   {{- end -}}
+  {{ $placeholder.RelPermalink}}
+  {{ $src.RelPermalink}}
+  {{- $placeholder = printf "data:image/gif;base64,%s" ($placeholder.Content | base64Encode) -}}
 {{- end -}}
 
-{{- if eq site.Params.image.placeholder.type "css" -}}
+{{- $inlinePlaceholder := ""}}
+{{- if and (eq site.Params.image.placeholder.type "inline") (or (eq site.Params.image.placeholder.style "solid") (eq site.Params.image.placeholder.style "blur") ) -}}
+{{- $inlinePlaceholder = printf "background-image: url(%s);background-size:cover;" $placeholder -}}
 {{- end -}}
 
 {{- /*  set class scratch to array/slice */ -}}
@@ -351,6 +353,7 @@
 {{- /*  
   * OUTPUT HTML  
   */ -}}
+
 {{ $linkClass := .linkClass | default site.Params.imgage.link.class }}
 {{ $linkRel := .linkRel | default site.Params.imgage.link.rel }}
 {{ $linkTarget := .linkTarget | default site.Params.imgage.link.target }}
@@ -368,14 +371,14 @@
     {{- /* this line below removes the original format from the sources */ -}}
     {{- /* if ne $format $src.MediaType.SubType */}}
     <source type="{{ printf "media/%s" $format }}"
-    {{- if and $lazyLibrary (and $dataSrcset (eq $.loading "lazy" ) ) -}} 
+    {{- if and (eq site.Params.image.placeholder.type "js") (and $dataSrcset (eq $loading "lazy" ) ) -}} 
     data-srcset="{{ $srcset }}"
     {{- else -}}
     srcset="{{ $srcset }}"
     {{ end -}}
     {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
     {{- if or (eq $layout "responsive") (eq $layout "fill") }}
-      {{- if and $lazyLibrary $dataSizes -}}
+      {{- if $dataSizes -}}
         data-sizes="auto"
       {{- else -}}
         sizes="{{ $.sizes | default "100vw" }}"
@@ -390,10 +393,10 @@
   <img 
     alt="{{ $alt }}" 
     title="{{ $.title }}"
-    {{ if or (and $lazyLibrary $lazyLibraryImageClass) $class }}
-      class="{{ if $lazyLibrary }}{{ $lazyLibraryImageClass }} {{ end }} {{- $class }}" 
-    {{ end -}}
-    style="{{- $.style | safeCSS -}}{{- $placeholder | safeCSS -}}"
+    class="{{- $class -}}" 
+    {{- if or $.style $inlinePlaceholder }}
+    style="{{- $.style | safeCSS -}}{{- $inlinePlaceholder | safeCSS -}}"
+    {{- end }}
     decoding="async"
     {{- if and (not $lazyLibrary) (not $dataSrcset) }}
     loading="{{ $loading }}"
@@ -401,14 +404,14 @@
     {{ $.data | safeHTMLAttr -}}
     {{- /* only include resized images if they are from a resource bundle */ -}}
     {{ if $src -}}
-      {{- if and $lazyLibrary (and $dataSrcset (eq $.loading "lazy" ) ) -}} 
+    {{- if and (eq site.Params.image.placeholder.type "js") (and $dataSrcset (eq $loading "lazy" ) ) -}}
       data-srcset="{{ $srcset }}"
       {{- else -}}
       srcset="{{ $srcset }}"
       {{ end -}}
       {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
       {{- if or (eq $layout "responsive") (eq $layout "fill") }}
-        {{- if and $lazyLibrary $dataSizes -}}
+        {{- if $dataSizes -}}
           data-sizes="auto"
         {{- else -}}
           sizes="{{ $.sizes | default "100vw" }}"
@@ -416,6 +419,7 @@
       {{ end -}}
       {{- if and $lazyLibrary $dataSrc -}}
     data-src="{{ $single.RelPermalink }}"
+    src="{{- $placeholder -}}"
       {{- else -}}
     src="{{ $single.RelPermalink }}"
       {{- end -}}

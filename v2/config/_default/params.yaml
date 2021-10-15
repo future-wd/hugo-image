@@ -2,8 +2,12 @@
 image:
   formats: ["original", "webp"]
   placeholder:
-    style: empty # empty | color | blur | solid (blur/solid js or inline type only)
-    type: css  # css | js | inline
+    style: blur # empty | color | blur | solid (blur/solid js or inline type only)
+    type: inline  # css | js | inline
+    blur:
+      amount: 6 
+      size: 50
+
     # nativePlaceholder: none or colour value
     # libraryPlaceholder: blur, none, colour
   loading: lazy
