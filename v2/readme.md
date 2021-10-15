@@ -443,31 +443,8 @@ module:
 The first line can be omitted if using a params.yaml file. Defaults have been shown.
 
 ```YAML
-params:
-  image:
-    format: ["webp" "original"]
-    placeholder: blur
-    loading: lazy
-    minWidth: 500
-    maxWidth: 4000
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
-    linkClass: ""
-  figure:
-    class: figure
-    titleClass: h4
-    imageClass: figure-img
-    figcaptionClass: figure-caption
-    attrLinkClass: ""
-  lazyLibrary:
-    enabled: false
-    dataSrcSet: true
-    dataSrc: false
-    dataSizes: true
-    imageStyle: "display:block;width:100%;"
-    imageClass: lazysizes
-    figureStyle: "display:block!important;"
-    noscript: false
+
+to be updated
 
 ```
 
