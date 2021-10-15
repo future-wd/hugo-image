@@ -24,8 +24,6 @@
 {{- $dataSizes := site.Params.image.lazyLibrary.dataSizes | default true -}}
 {{- /*  add a css class for lazyload library e.g. "lazyload" */ -}}
 {{- $lazyLibraryImageClass := site.Params.image.lazyLibrary.imageClass | default "lazyload" -}}
-{{- /*  inline style for the img tag  */ -}}
-{{- $lazyLibraryImageStyle := site.Params.image.lazyLibrary.imageStyle | default "display:block;width:100%;" -}}
 {{- /*  inline style for the figure tag  */ -}}
 {{- $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle | default "display:block!important;" -}}
 {{- /*  enable noscript tag  */ -}}
