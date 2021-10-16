@@ -477,3 +477,69 @@ The following elements are required for the `<noscript>` module to work. The scr
 </html>
 
 ```
+
+# USE CASES
+
+## 1. Native lazy loading, no JS scripts, no Inline Styles, no placeholder
+
+WORKING
+
+``` YAML
+image:
+  placeholder:
+    style: empty
+  lazyLibrary:
+    enable: false
+```
+
+## 2. Native lazy loading, no JS scripts, no Inline Styles, solid color placeholder
+
+NOT WORKING
+
+``` YAML
+image:
+  placeholder:
+    style: color
+    color: "#eee"
+    type: css 
+  lazyLibrary:
+    enable: false
+```
+
+## 3. Native lazy loading, no JS scripts, Inline style for placeholder
+
+WORKING
+
+``` YAML
+image:
+  placeholder:
+    style: blur # or solid
+    type: inline
+    blur:
+      amount: 6 # amount of gaussian blur
+      size: 50 # pixel size of placeholder (which is stretched to the image's size)
+  lazyLibrary:
+    enable: false
+```
+
+## 4. JS Lazy loading with LazySizes, inline image placeholder, automatic sizes="...", noscript fall back
+
+- Placeholder image is inlined as a base64 data uri
+
+- Lazysizes is configured to utilise native lazy loading if its available in the browser
+
+- You must import the lazysizes.html partial in the documents head
+
+- You must run `npm install lazysizes` to install lazysizes as a project dependency
+
+``` YAML
+image:
+  placeholder:
+    style: blur # or solid
+    type: js
+    blur:
+      amount: 6 # amount of gaussian blur
+      size: 50 # pixel size of placeholder (which is stretched to the image's size)
+  lazyLibrary:
+    enable: true
+```

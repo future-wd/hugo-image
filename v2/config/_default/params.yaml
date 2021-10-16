@@ -1,38 +1,44 @@
 
 image:
   formats: ["original", "webp"]
-  placeholder:
-    style: blur # empty | color | blur | solid (blur/solid js or inline type only)
-    type: inline  # css | js | inline
-    blur:
-      amount: 6 
-      size: 50
-
-    # nativePlaceholder: none or colour value
-    # libraryPlaceholder: blur, none, colour
   loading: lazy
+  layout: responsive
+  objectFit: cover
   minWidth: 500
   maxWidth: 4000
   deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
   imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
+  #css: 
+  placeholder:
+    style: blur # empty | color | blur | solid (blur/solid js or inline type only)
+    type: css  # css | js | inline
+    blur:
+      amount: 3
+      size: 50
+    # nativePlaceholder: none or colour value
+    # libraryPlaceholder: blur, none, colour
   link:
     class:
     rel: 
-    target:  
+    target: 
+    #css: 
   figure:
-    class: figure # a class must be set here for lazylibrary.figureCSS to target figures
+    class: figure # .figureCSS to target figures
     titleClass: h4
     imageClass: figure-img
     figcaptionClass: figure-caption
     attrLinkClass: ""
+    #css: 
   lazyLibrary:
-    enabled: false
-    dataSrcSet: true
-    dataSrc: false
+    enable: false
+    dataSrcset: true
+    dataSrc: true
     dataSizes: true
+    class: lazyload # can be array/slice
+    loadedClass: lazyloaded # used for blur-up
+    blurUp: true
     #  imageCSS: "display:block;width:100%;" # add to css, but configure here?
-    imageClass: lazysizes # option of array
     #  figureCSS: "display:block!important;" # add to css, but configure here? img.image and figure.[figure.class] (takes )
     # add to css 
     # $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle
-    noscript: false
+    noscript: true

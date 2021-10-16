@@ -1,4 +1,4 @@
-.image {
+.hugo-img {
   &__responsive {
     width: 100%;
     height: auto;
@@ -35,19 +35,24 @@
       }
     }
   }
-  
-  // &--lazyload {
-  //   opacity:0;
-  // }
-
-  // &--lazyloading {
-  //   opacity:0;
-  // }
-
-  // &--lazyloaded {
-  //   opacity: 1;
-  // }
-
 }
 
+.hugo-img.{{- site.Params.image.lazyLibrary.class }} {
+  display: none;
+}
+
+.js .hugo-img.{{- site.Params.image.lazyLibrary.class }} {
+  display: inline;
+}
+
+.blur-up {
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+  transition: filter 400ms, -webkit-filter 400ms;
+}
+
+.blur-up.{{- site.Params.image.lazyLibrary.loadedClass }} {
+  -webkit-filter: blur(0);
+  filter: blur(0);
+}
 
