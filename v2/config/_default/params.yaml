@@ -20,13 +20,13 @@ image:
     rel: 
     target:  
   figure:
-    class: figure # a class must be set here for lazylibrary.figureCSS to target figures
+    class: figure # .figureCSS to target figures
     titleClass: h4
     imageClass: figure-img
     figcaptionClass: figure-caption
     attrLinkClass: ""
   lazyLibrary:
-    enabled: true  # to be removed
+    enable: true  
     dataSrcSet: true
     dataSrc: true
     dataSizes: true
