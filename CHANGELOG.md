@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](/github.com/powerfulweb/hugo-image/compare/v0.1.3...v0.1.4) (2021-10-16)
+
+
+### Features
+
+* lazysizes working ([ab902b4](/github.com/powerfulweb/hugo-image/commit/ab902b47777cd037eca4f898f8bcaa7450572d4f))
+
+
+### Bug Fixes
+
+* added use cases to readme ([e9f2d8c](/github.com/powerfulweb/hugo-image/commit/e9f2d8cde8476c031f6508a4548844ce19753fe5))
+* css without placeholder ([3df74cc](/github.com/powerfulweb/hugo-image/commit/3df74cc598b6c7b9216d2191f9974fc029b0b1c3))
+* initial js does not await image load ([68d957c](/github.com/powerfulweb/hugo-image/commit/68d957cff0a82979af0104b9ebbf763a5847ad7c))
+* inline styles working ([73c21b8](/github.com/powerfulweb/hugo-image/commit/73c21b89ef90c9cb72e7fb043d8de4030560b010))
+* missing resource attributes, original format, format display in picture ([bc54f5d](/github.com/powerfulweb/hugo-image/commit/bc54f5d9ae740dd64f3c4fa8fd246d2f209d560d))
+* params pulled from file ([6f608df](/github.com/powerfulweb/hugo-image/commit/6f608dff457f329246f56f77e34765c4f4a46be8))
+
 ### [0.1.3](/github.com/powerfulweb/hugo-image/compare/v0.1.2...v0.1.3) (2021-10-06)
 
 
