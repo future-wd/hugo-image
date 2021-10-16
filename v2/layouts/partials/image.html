@@ -2,39 +2,6 @@
 {{ $scratch := newScratch }}
 {{- /* check if .src is a page resource */ -}}
 {{- $src := .page.Resources.GetMatch (printf "**%s*" .src) -}}
-{{- /* temp class integrate into lazy library below later */ -}}
-{{- /*
-  * Lazy Library e.g. lazysizes params config
-  */ -}}
-{{- /*  get lazyLibrary from dict otherwise params  */ -}}
-{{- $lazyLibrary := .lazyLibrary | default site.Params.image.lazyLibrary.enabled -}}
-
-{{- /*  replaces srcset with data-srcset if loading == "lazy"   */ -}}
-{{- $dataSrcset := site.Params.image.lazyLibrary.dataSrcset  -}}
-{{- /*  replaces src with data-src if loading == "lazy"   */ -}}
-{{- $dataSrc := site.Params.image.lazyLibrary.dataSrc  -}}
-{{- /*  replaces sizes with data-sizes="auto"  */ -}}
-{{- $dataSizes := site.Params.image.lazyLibrary.dataSizes  -}}
-{{- /*  add a css class for lazyload library e.g. "lazyload" */ -}}
-{{- $lazyLibraryClass := site.Params.image.lazyLibrary.class  -}}
-{{- if reflect.IsSlice site.Params.image.lazyLibrary.class -}}
-  {{- $lazyLibraryClass := delimit site.Params.image.lazyLibrary.class " "  -}}
-{{- end -}}
-{{- /*  enable noscript tag  */ -}}
-{{- $lazyLibraryNoscript := site.Params.image.lazyLibrary.noscript  -}}
-{{- /*
-  * Figure display params config
-  */ -}}
-{{- /*  set class for figure tag */ -}}
-{{- $figureClass := site.Params.image.figure.class }}
-{{- /*  set class for figure title tag */ -}}
-{{- $titleClass := site.Params.imgage.figure.titleClass  }}
-{{- /*  set class which is appended to figure image */ -}}
-{{- $figureImageClass := site.Params.image.figure.imageClass }}
-{{- /*  set class for figcaption tag */ -}}
-{{- $figcaptionClass := site.Params.imgage.figure.figcaptionClass  }}
-{{- /*  set class for figure attribute link tag */ -}}
-{{- $attrLinkClass := site.Params.imgage.figure.attrLinkClass }}
 {{- /*
   * Image params config
   */ -}}
@@ -72,41 +39,37 @@
     {{- errorf "Invalid .quality %q - must be integer of 1-100" . -}}
   {{- end -}}
 {{- end -}}
-{{- /* sanitise .fillAnchor */ -}}
+{{- /* sanitise .fillAnchor default set via hugo image config */ -}}
 {{- with .fillAnchor -}}
   {{- $anchorValues = (slice "Center" "TopLeft" "Top" "TopRight" "Left" "Right" "BottomLeft" "Bottom" "BottomRight") -}}
   {{- if not (in $anchorValues $.fillAnchor ) -}}
     {{- errorf "Invalid .fillAnchor %q - valid options are %q." . (delimit $anchorValues ",") -}}
   {{- end -}}
 {{- end -}}
-{{- /* sanitise .resampleFilter */ -}}
+{{- /* sanitise .resampleFilter default set via hugo image config */ -}}
 {{- with .resampleFilter -}}
   {{- $resampleValues := (slice "Box" "NearestNeighbor" "Linear" "Gaussian") -}}
   {{- if not (in $resampleValues . ) -}}
     {{- errorf "Invalid .resampleFilter %q - valid options are %q." . (delimit $resampleValues ",") -}}
   {{- end -}}
 {{- end -}}
-{{- /*    sanitize .hint hugo default is "photo" */ -}}
+{{- /*    sanitize .hint default set via hugo image config */ -}}
 {{- $hint := "" -}}
 {{- with .hint -}}
   {{- $hintValues := (slice "picture" "photo" "drawing" "icon" "text" ) -}}
   {{- if in $hintValues . -}}
     {{- $hint = . -}}
   {{- else -}}
-    {{- errorf "Invalid .loading %q - valid options are %q." . (delimit $hintValues ",") -}}
+    {{- errorf "Invalid .hint %q - valid options are %q." . (delimit $hintValues ",") -}}
   {{- end -}}
 {{- end -}}
 {{- /* END HUGO IMAGE DEFAULTS */ -}}
 {{- /* sanitise .layout */ -}}
 {{- /*  set default layout value */ -}}
-{{- $layout := "responsive" -}}
-{{- with .layout -}}
-  {{- $layoutValues := (slice "fixed" "intrinsic" "responsive" "fill" ) -}}
-  {{- if in $layoutValues . -}}
-    {{- $layout = . -}}
-  {{- else -}}
-    {{- errorf "Invalid .layout %q - valid options are %q." . (delimit $layoutValues ",") -}}
-  {{- end -}}
+{{- $layout := .layout | default site.Params.image.layout -}}
+{{- $layoutValues := (slice "fixed" "intrinsic" "responsive" "fill" ) -}}
+{{- if not (in $layoutValues $layout) -}}
+  {{- errorf "Invalid .layout %q - valid options are %q." $layout (delimit $layoutValues ",") -}}
 {{- end -}}
 {{- /*  sanitize width, depends on .layout above */ -}}
 {{- /* .width only parsed if laout of intrinsic or fixed used and .width is <= the images width */ -}}
@@ -128,17 +91,10 @@
 {{- /*  sanitize loading */ -}}
 {{- /*  define default loading  */ -}}
 {{- $loading := .loading | default site.Params.image.loading -}}
-{{- with .loading -}}
-  {{- $loadingValues := (slice "lazy" "eager" "auto" ) -}}
-  {{- if in $loadingValues . -}}
-    {{- if or (eq . "eager") (eq . "auto") -}}
-      {{- $loading = . -}}
-    {{- end -}}
-  {{- else -}}
-    {{- errorf "Invalid .loading %q - valid options are %q." . (delimit $loadingValues ",") -}}
-  {{- end -}}
+{{- $loadingValues := (slice "lazy" "eager" "auto" ) -}}
+{{- if not (in $loadingValues $loading) -}}
+  {{- errorf "Invalid .loading %q - valid options are %q." $loading (delimit $loadingValues ",") -}}
 {{- end -}}
-
 {{- /* validate rotate */ -}}
 {{- $rotate := "" -}}
 {{- with .rotate -}}
@@ -230,11 +186,10 @@
     {{- /*  initialise srcset, img and imgMap. They are cleared for each format */ -}}  
     {{- $srcset := slice -}}
     {{- $imgMap := dict -}}
-   
     {{- range $indexWidth, $width := $widths -}} 
       {{- /*  only if src image is equal or greater than resize width  */ -}}
       {{- if ge $src.Width $width -}}   
-      {{- $resize := "blank" -}}
+      {{- $resize := "" -}}
         {{- /*  set/calculate $fillHeight. fill ratio takes presedence */ -}}
         {{- $fillHeight := 0 -}}
         {{- if $.fillRatio -}}
@@ -292,29 +247,23 @@
 {{- /*  sanitise and process placeholder */ -}}
 {{- /*  set default placeholder */ -}}
 {{- /*  this needs to be conditional on $src and alternatives put in place */ -}}
-{{- $placeholder := .placeholderStyle | default site.Params.image.placeholder.style -}}
+{{- $placeholder := "" -}}
+{{- $placeholderStyle := .placeholder | default site.Params.image.placeholder.style -}}
 {{- $placeholderValues := (slice "blur" "solid" "empty" "color") -}}
-{{- if in $placeholderValues $placeholder -}}
-  {{- $placeholder = .placeholder -}}
-{{- else -}}
-  {{- errorf "Invalid .placeholder %q - valid options are %q" . (delimit $placeholderValues ", ") -}}
+{{- if not (in $placeholderValues $placeholderStyle) -}}
+  {{- errorf "Invalid .placeholder %q - valid options are %q" $placeholderStyle (delimit $placeholderValues ", ") -}}
 {{- end -}}
 {{- /*  set placeholder  */ -}}
-{{- $placeholderStyle := .placeholderStyle | default site.Params.image.placeholder.style -}}
 {{- $placeholderType := site.Params.image.placeholder.type -}}
-{{- if eq $placeholderStyle "empty" -}}
-  {{- $placeholder = "" -}}
 {{- /* generate solid and blur placeholder for js and inline use */ -}}
-{{- else if or (eq $placeholderType "js") (eq $placeholderType "inline") -}}
-{{- /* get the width and height of the outputted image for placeholders */ -}}
+{{- if or (eq $placeholderType "js") (eq $placeholderType "inline") -}}
+  {{- /* get the width and height of the outputted image for placeholders */ -}}
   {{- if eq $placeholderStyle "solid" -}}
     {{- $placeholder = $src.Resize "1x gif" -}}
   {{- else if eq $placeholderStyle "blur" -}}
     {{- $placeholder = $src.Resize (printf "%vx gif" site.Params.image.placeholder.blur.size) -}} 
     {{- $placeholder = $placeholder.Filter (images.GaussianBlur site.Params.image.placeholder.blur.amount) -}}
   {{- end -}}
-  {{ $placeholder.RelPermalink}}
-  {{ $src.RelPermalink}}
   {{- $placeholder = printf "data:image/gif;base64,%s" ($placeholder.Content | base64Encode) -}}
 {{- end -}}
 {{- /* generate inline placeholder style */ -}}
@@ -322,11 +271,8 @@
 {{- if and (eq site.Params.image.placeholder.type "inline") (or (eq site.Params.image.placeholder.style "solid") (eq site.Params.image.placeholder.style "blur") ) -}}
 {{- $inlinePlaceholder = printf "background-image: url(%s);background-size:cover;" $placeholder -}}
 {{- end -}}
-
 {{- /*  set class scratch to array/slice */ -}}
 {{ $scratch.Set "class" slice }}
-{{- /*  add lazyload class */ -}}
-{{- $scratch.Add "class" $lazyLibraryClass -}}
 {{- /* add .class if its a slice, otherwise add (slice .class) */ -}}
 {{- if .class -}}
   {{- if reflect.IsArray .class -}}
@@ -336,26 +282,30 @@
   {{- end -}}
 {{- end -}}
 {{- /* add related BEM image classes */ -}}
-{{- $scratch.Add "class" (slice (printf "image__%s" $layout)) -}}
+{{- $scratch.Add "class" "hugo-img" -}}
+{{- $scratch.Add "class" (slice (printf "hugo-img__%s" $layout)) -}}
 {{- if eq $layout "fill" -}}
-  {{- $objectFit := "cover" -}}
-  {{- with .objectFit -}}
-    {{- $objectFit = . -}}
-  {{- end -}}
-  {{- $scratch.Add "class" (slice (printf "image__object-fit--%s" $objectFit)) -}}
+  {{- $objectFit := .objectFit | default site.Params.image.objectFit -}}
+  {{- $scratch.Add "class" (slice (printf "hugo-img__object-fit--%s" $objectFit)) -}}
   {{- with .objectPosition -}}
     {{- $objectPosition = "object-position:%d;" . -}}
-    {{- $scratch.Add "class" (slice (printf "image__object-position--%s" $objectPosition)) -}}
+    {{- $scratch.Add "class" (slice (printf "hugo-img__object-position--%s" $objectPosition)) -}}
   {{- end }}
 {{- end -}}
 {{- /* delimit scratch.class into space separated string */ -}}
 {{- $class := $scratch.Get "class" -}}
 {{- $class = delimit $class " " -}}
-
+{{- $lazyLibraryClass := "" -}}
+{{- $lazyLibrary := .lazyLibrary | default site.Params.image.lazyLibrary.enable -}}
+{{- if eq $lazyLibrary true -}}
+  {{- $lazyLibraryClass = site.Params.image.lazyLibrary.class  -}}
+  {{- if reflect.IsSlice site.Params.image.lazyLibrary.class -}}
+    {{- $lazyLibraryClass = delimit site.Params.image.lazyLibrary.class " "  -}}
+  {{- end -}}
+{{- end -}}
 {{- /*  
   * OUTPUT HTML  
   */ -}}
-
 {{ $linkClass := .linkClass | default site.Params.imgage.link.class }}
 {{ $linkRel := .linkRel | default site.Params.imgage.link.rel }}
 {{ $linkTarget := .linkTarget | default site.Params.imgage.link.target }}
@@ -368,85 +318,78 @@
 <picture>
 {{- if $src -}}
   {{- range $format, $map := $sourceMap -}}
-    {{ $single := index $map "single" -}}
-    {{ $srcset := index $map "srcset" }}
-    {{- /* this line below removes the original format from the sources */ -}}
-    {{- /* if ne $format $src.MediaType.SubType */}}
-    <source type="{{ printf "media/%s" $format }}"
-    {{- if and (eq site.Params.image.placeholder.type "js") (and $dataSrcset (eq $loading "lazy" ) ) -}} 
-    data-srcset="{{ $srcset }}"
-    {{- else -}}
-    srcset="{{ $srcset }}"
-    {{ end -}}
-    {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
-    {{- if or (eq $layout "responsive") (eq $layout "fill") }}
-      {{- if $dataSizes -}}
-        data-sizes="auto"
+    {{- if ne $format $src.MediaType.SubType -}}
+      {{ $single := index $map "single" -}}
+      {{ $srcset := index $map "srcset" }}
+      <source type="{{ printf "media/%s" $format }}"
+      {{- if and (eq $lazyLibrary true) (and (eq site.Params.image.lazyLibrary.dataSrcset true) (eq $loading "lazy" ) ) -}}
+      data-srcset="{{ $srcset }}"
       {{- else -}}
-        sizes="{{ $.sizes | default "100vw" }}"
-      {{- end -}}
-    {{ end -}}>
-      {{- /* end */ -}}
+      srcset="{{ $srcset }}"
+      {{ end -}}>
+    {{- end -}}
   {{- end -}}
 {{- end -}}
+{{- /*  add a css class for lazyload library e.g. "lazyload" */ -}}
 {{- with index $sourceMap $src.MediaType.SubType -}}
   {{- $single := index . "single" -}}
   {{- $srcset := index . "srcset" -}}
   <img 
     alt="{{ $alt }}" 
     title="{{ $.title }}"
-    class="{{- $class -}}" 
+    class="{{- $class }} {{ $lazyLibraryClass }} {{if eq site.Params.image.lazyLibrary.blurUp true }}blur-up{{ end }}" 
     {{- if or $.style $inlinePlaceholder }}
-    style="{{- $.style | safeCSS -}}{{- $inlinePlaceholder | safeCSS -}}"
+      style="{{- $.style | safeCSS -}}{{- $inlinePlaceholder | safeCSS -}}"
     {{- end }}
     decoding="async"
-    {{- if and (not $lazyLibrary) (not $dataSrcset) }}
     loading="{{ $loading }}"
-    {{- end -}}
     {{ $.data | safeHTMLAttr -}}
     {{- /* only include resized images if they are from a resource bundle */ -}}
     {{ if $src -}}
-    {{- if and (eq site.Params.image.placeholder.type "js") (and $dataSrcset (eq $loading "lazy" ) ) -}}
-      data-srcset="{{ $srcset }}"
+      {{- if and (eq $lazyLibrary true) (and (eq site.Params.image.lazyLibrary.dataSrcset true) (eq $loading "lazy" ) ) -}}
+        data-srcset="{{ $srcset }}"
       {{- else -}}
-      srcset="{{ $srcset }}"
+        srcset="{{ $srcset }}"
       {{ end -}}
-      {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
+        {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
       {{- if or (eq $layout "responsive") (eq $layout "fill") }}
-        {{- if $dataSizes -}}
+        {{- if and (eq $lazyLibrary true) (eq site.Params.image.lazyLibrary.dataSrcset true) -}}
           data-sizes="auto"
         {{- else -}}
           sizes="{{ $.sizes | default "100vw" }}"
         {{- end -}}
       {{ end -}}
-      {{- if and $lazyLibrary $dataSrc -}}
-    data-src="{{ $single.RelPermalink }}"
-    src="{{- $placeholder -}}"
-      {{- else -}}
-    src="{{ $single.RelPermalink }}"
+      {{- if and (eq $lazyLibrary true) (and (eq site.Params.image.lazyLibrary.dataSrc true) (eq $loading "lazy" ) ) -}}
+        data-src="{{ $single.RelPermalink }}"
+      {{- end }}
+      {{- if and (and (eq $lazyLibrary true) (eq site.Params.image.placeholder.type "js")) (or (eq site.Params.image.placeholder.style "blur") (eq site.Params.image.placeholder.style "solid")) }}
+        src="{{- $placeholder | safeURL -}}"
+      {{- else if (not (eq site.Params.image.lazyLibrary.dataSrc true)) -}}
+        src="{{ $single.RelPermalink }}"
       {{- end -}}
-    width="{{ $single.Width }}"
-    height="{{ $single.Height }}"
+      width="{{ $single.Width }}"
+      height="{{ $single.Height }}"
     {{ else }}
       {{- /* fall back to stock hugo behaviour when image is not available in bundle */ -}}
-    src="{{ .src }}"
+      src="{{ .src }}"
     {{ end -}} />
 {{ end -}}
 </picture>
-{{ if and $lazyLibrary $lazyLibraryNoscript -}}
+{{ if and (eq $lazyLibrary true) (eq site.Params.image.lazyLibrary.noscript true) -}}
 <noscript>  
   {{- /* no srcset is used, as it is assumed that browser without JS does not support srcset. Only for use with lazyload library */ -}}
-  {{- with $sourceMap.original.single -}}
+  {{- with index $sourceMap $src.MediaType.SubType -}}
+  {{- $single := index . "single" -}}
   <img 
     alt="{{ $alt }}" 
     title="{{ $.title }}"
     class="{{ $class }}"
     style="{{- $.style | safeCSS -}}"
     decoding="async"
-    loading="auto"
-    src="{{ .RelPermalink }}"
-    width="{{ .Width }}"
-    height="{{ .Height }}" />
+    loading="{{ $loading }}"
+    src="{{ $single.RelPermalink }}"
+    width="{{ $single.Width }}"
+    height="{{ $single.Height }}" />
 {{ end -}}
 </noscript>
 {{ end -}}

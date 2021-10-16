@@ -1,0 +1,12 @@
+{{- /*  supresses errors if no or error .src is supplied */ -}}
+{{- $src := resources.Get "js/lazysizes.js" -}}
+{{- /* for develop environment e.g. hugo server */ -}}
+{{ if eq (hugo.Environment) "development" -}}
+  {{ $src = $src | js.Build (dict "sourceMap" "inline") | fingerprint "sha512" -}}
+{{ else -}}
+  {{ $src = $src  | js.Build | fingerprint "sha512" -}}
+{{ end -}}
+<script async
+  src="{{- $src.RelPermalink -}}"
+  integrity="{{- $src.Data.Integrity -}}">
+</script>
