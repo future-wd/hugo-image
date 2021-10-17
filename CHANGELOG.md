@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.2](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2021-10-17)
+
+
+### Bug Fixes
+
+* add gomod for v2 ([6455020](/github.com/powerfulweb/hugo-image/commit/64550208f4ff47cc5f7e97c182915214210f7012))
+
 ## [2.0.0-alpha.1](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2021-10-17)
 
 
