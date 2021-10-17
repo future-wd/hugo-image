@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.1](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2021-10-17)
+
+
+### Bug Fixes
+
+* update package.json to 2.0.0-alpha.0 ([237e525](/github.com/powerfulweb/hugo-image/commit/237e525482c6553651b7200aa470ae97d641eaad))
+
 ### [0.1.5-alpha.0](/github.com/powerfulweb/hugo-image/compare/v0.1.4...v0.1.5-alpha.0) (2021-10-17)
 
 ### [0.1.4](/github.com/powerfulweb/hugo-image/compare/v0.1.3...v0.1.4) (2021-10-16)
