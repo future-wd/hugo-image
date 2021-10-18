@@ -35,6 +35,7 @@ image:
     dataSrc: true
     dataSizes: true
     class: lazyload # can be array/slice
+    loadingClass: lazyloading
     loadedClass: lazyloaded # used for blur-up
     blurUp: true
     #  imageCSS: "display:block;width:100%;" # add to css, but configure here?
