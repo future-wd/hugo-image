@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.3](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* add alpha release ([b7dd7c8](/github.com/powerfulweb/hugo-image/commit/b7dd7c8758b1012d32eeb4dbb652e18c254b6653))
+* add css ([2466d13](/github.com/powerfulweb/hugo-image/commit/2466d1399a99ddd7ba5f2d0a16a7abfbfe8f2bb8))
+* move and rename partials ([be81c77](/github.com/powerfulweb/hugo-image/commit/be81c7717bebf104a91ee8e88cdd5519d5595057))
+* rename and move partials ([e1e664c](/github.com/powerfulweb/hugo-image/commit/e1e664c398526dc40d3e796a3503dc65483427fe))
+* update v1 readme with redirect ([e252862](/github.com/powerfulweb/hugo-image/commit/e252862ea5e20cfe69ea5cb6da4ddfbb4e03136c))
+* updated v2 readme ([db34ef7](/github.com/powerfulweb/hugo-image/commit/db34ef79978542f12bf94d4f83d6da3892dc45b7))
+
 ## [2.0.0-alpha.2](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2021-10-17)
 
 
