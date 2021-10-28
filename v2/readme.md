@@ -19,6 +19,8 @@ Hugo/Image is next/image re-invented for hugo, with the addition of hugo's power
 
 This project is still pre-release. It has not been tested in all use cases. Feedback is welcome.
 
+**See the end of this file for installation instructions**
+
 ## Table of Contents
 
 - Required Parameters
@@ -604,4 +606,24 @@ image:
       size: 50 # pixel size of placeholder (which is stretched to the image's size)
   lazyLibrary:
     enable: true
+```
+## image partial usage example
+
+```HTML
+{{ partial "image" (dict "src" "image.jpg" "page" . "title" "Image Title" "fillRatio" (slice 3 2) )}}
+
+```
+
+or separate parameters for cleaner code
+
+```HTML
+{{- $imageParams := (dict 
+  "src" "image.jpg" 
+  "page" . 
+  "title" 
+  "Image Title" 
+  "fillRatio" (slice 3 2) ) -}}
+
+{{ partial "image" $imageParams }}
+
 ```
