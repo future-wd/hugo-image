@@ -11,7 +11,7 @@ image:
   #css: 
   placeholder:
     style: blur # empty | color | blur | solid (blur/solid js or inline type only)
-    type: css  # css | js | inline
+    type: js  # css | js | inline
     blur:
       amount: 3
       size: 50
