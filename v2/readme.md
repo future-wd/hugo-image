@@ -1,10 +1,10 @@
-# Hugo/image - next/image re-invented for hugo
+# Hugo/image
 
 <p align="center">
-  Hyas is a Hugo starter helping you build modern websites that are secure, fast, and SEO-ready — by default.
+Hugo/Image is next/image re-invented for hugo, with the addition of hugo's powerful image processing. 
 </p>
 
-<p align="center">
+<!-- <p align="center">
   <a href="https://github.com/future-wd/hugo-image/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/future-wd/hugo-image" alt="GitHub">
     
@@ -15,9 +15,9 @@
   <a href="#" >
     <img src="https://img.shields.io/github/downloads/future-wd/hugo-image/total" alt"Github Downloads">
   </a>
-</p>
+</p> -->
 
-This project is still pre-release. It has not been tested properly. Feedback is welcome.
+This project is still pre-release. It has not been tested in all use cases. Feedback is welcome.
 
 ## Table of Contents
 
@@ -33,13 +33,13 @@ This project is still pre-release. It has not been tested properly. Feedback is 
 
   - [General](#optional-parameters)
 
-  - [Fixed/Intrinsic Layout](#optional-parameters---responsivefill-layout)
+  - [Responsive/Fill Layout](#optional-parameters---responsivefill-layout)
 
-  - [Responsive/Fill Layout](#optional-parameters---fixedintrinsic-layout)
+  - [Fixed/Intrinsic Layout](#optional-parameters---fixedintrinsic-layout)
 
-  - [Image Link Parameters](#image-link-parameters)
+  - [Image Link Parameters](#optional-parameters---image-link)
 
-  - [Figure Parameters](#figure-parameters)
+  - [Figure Parameters](#optional-parameters---figures)
 
   - [Hugo Image Processing](#optional-parameters---hugo-image-processing)
 
@@ -55,7 +55,7 @@ This project is still pre-release. It has not been tested properly. Feedback is 
 
 - Installation
 
-  - As a module
+  - [As a module](#as-a-module)
 
 - Prerequisites
 
@@ -180,7 +180,7 @@ Defaults to `576` (px) - minimum width that a responsive/fill image will be resi
 
 This default value corresponds to a full width image being displayed on a mobile screen (Bootstrap XS) at a screen pixel density of 1x. If the image is less than full screen width for the smallest breakpoint, adjust minWidth to suit.
 
-### objectFit 
+### objectFit
 
 default is cover
 
@@ -286,14 +286,14 @@ see <https://gohugo.io/content-management/image-processing/#hint>
 Tell hugo where to anchor the crop when using .fillRatio, options are Smart (default), Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight.
 see <https://gohugo.io/content-management/image-processing/#anchor>
 
-### bgColor 
+### bgColor
 Not needed unless a target format is configured which does not support transparency e.g. jpg
 Provide a hex color.
 see <https://gohugo.io/content-management/image-processing/#background-color>
 
 ## Global Configuration
 
-All of the following can be set inline using dict. See above for usage. `deviceSizes` and `imageSizes` are set through the inline `sizes` key.
+The following are set in params.yaml or params.yaml see the example below.
 
 ### format
 
@@ -309,6 +309,14 @@ Default placeholder format. Defaults to `blur`. Can be changed to `solid` or `em
 ### loading
 
 Default loading parameter for image tag. Defaults to `lazy`. Can be changed to `auto` to disable default lazy loading behaviour.
+
+### layout 
+
+Default image handling. Default is `responsive` can be set to `intrinsic`, `fixed` and `fill`.
+
+### objectFit
+
+Default object-fit. Defaults to `cover`. Can be set to `fill, contain, cover, none, scale-down`./
 
 ### minWidth
 
@@ -326,9 +334,37 @@ screen widths to be targetted when `layout` is `responsive` or `fill` defaults t
 
 screen widths to be targetted when `layout` is `responsive` or `fill` defaults to [16, 32, 48, 64, 96, 128, 256, 384]. deviceSizes and imageSizes are concatenated.
 
-### linkClass
+## Global Configuration - Placeholder
+
+## placeholder.style
+
+The placeholder style. Defaults to `blur` can be changed to `empty, color, solid`. `blur` and `solid` only work with js or inline placeholders.
+
+## placeholder.type
+
+The type of placeholder that will be generated. Defaults to `js` for a lazy loading library. Can be changed to `css` or `inline`.
+
+## placeholder.blur.amount
+
+Amount of gaussian blur to apply to blurred placeholder. Defaults to 3.
+
+## placeholder.blur.size 
+
+The size of the low quality image placeholder to generate (for type = blur). Defaults to `50`.
+
+## Global Configuration - link
+
+### link.class
 
 Defaults to `""` (null). Allows you to add a class if you have specified a url link for the image with `link` (see above).
+
+### link.rel
+
+Defaults to null. `<a rel="...">` text
+
+### link.target
+
+Defaults to null. `<a target="...">` text.
 
 ## Global Configuration - Figure
 
@@ -367,7 +403,7 @@ Default `true`. Replaces the `srcset="..."` attribute with `data-srcset` so the 
 
 ### lazyLibrary.dataSrc
 
-Default `false`. Replaces the `src="..."` attribute with `data-src` to enable the JS library to control the lazy loading of the image where `srcset` is not supported. Defaults to `false` so that `src` is used for a fall back where JS is not supported by the browser, or turned off. `src` should not be used by browsers which support `srcset`. If you enable this, if you wish to support non-js browsers, you need to turn on `<noscript>` support below.
+Default `true`. Replaces the `src="..."` attribute with `data-src` to enable the JS library to control the lazy loading of the image where `srcset` is not supported.  If you enable this, if you wish to support non-js browsers, you need to turn on `<noscript>` support below.
 
 ### lazyLibrary.dataSizes
 
@@ -377,13 +413,25 @@ Default `true`. Replaces the `sizes="..."` attribute with `data-sizes="auto"`. T
 
 Default `"display:block;width:100%;"`. This enables the image to responsively resize, based on the width inserted into the `sizes` attribute by the JS library. This string is added when `lazyLibrary.dataSizes` is enabled. 
 
-### lazyLibrary.imageClass
+### lazyLibrary.loadingClass
 
 Default `"lazyload"`. This string is added as a class name to the image. This informs the JS library that you would like to lazy load the image. This default class is also used for the `<noscript>` section below.
 
-## lazyLibrary.figureStyle
+### lazyLibrary.loadedClass
 
-Default `"display:block!important;"`. Enables the bootstrap figure to display properly, when using the above inline image style.
+Default `"lazyloaded"` used for the CSS file.
+
+### lazyLibrary.loadingClass
+
+Default `"lazyloading"` used for the CSS file.
+
+### lazyLibrary.blurUp
+
+Default `true`. Enables blur up css for placeholder.
+
+<!-- ## lazyLibrary.figureStyle
+
+Default `"display:block!important;"`. Enables the bootstrap figure to display properly, when using the above inline image style. -->
 
 ### lazyLibrary.noscript
 
@@ -427,6 +475,20 @@ module:
   - path: github.com/future-wd/hugo-image
 
 ```
+
+## Required CSS
+
+In the head use the following partial
+
+`{{- partial "image/css" . -}}`
+
+## Optional LazySizes library (required by default)
+
+Either import yourself or use the following partial in the head
+
+`{{- partial "image/lazysizes" . -}}`
+
+You must install lazysizes with `npm i lazysizes`
 
 ## Prerequisites
 
