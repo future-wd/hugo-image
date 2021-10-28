@@ -1,75 +1,9 @@
 # Hugo/image - next/image re-invented for hugo
 
-<p align="center">
-  Hyas is a Hugo starter helping you build modern websites that are secure, fast, and SEO-ready — by default.
-</p>
+## This readme is for version 1 (depreciated and not maintained)
+## [click here for version 2](https://github.com/future-wd/hugo-image/tree/master/v2)
 
-<p align="center">
-  <a href="https://github.com/future-wd/hugo-image/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/future-wd/hugo-image" alt="GitHub">
-    
-  </a>
-  <a href="https://github.com/future-wd/hugo-image/releases">
-    <img src="https://img.shields.io/github/v/release/future-wd/hugo-image?include_prereleases"alt="GitHub release (latest SemVer inc Pre Release)">
-  </a>
-  <a href="#" >
-    <img src="https://img.shields.io/github/downloads/future-wd/hugo-image/total" alt"Github Downloads">
-  </a>
-</p>
 
-This project is still pre-release. It has not been tested properly. Feedback is welcome.
-
-## Table of Contents
-
-- Required Parameters
-
-  - [General](#required-parameters)
-
-  - [Fixed/Intrinsic Layout](#required-parameters---fixedintrinsic-layout)
-
-  - [Responsive/Fill Layout](#required-parameters---responsivefill-layout)
-
-- Optional Parameters
-
-  - [General](#optional-parameters)
-
-  - [Fixed/Intrinsic Layout](#optional-parameters---responsivefill-layout)
-
-  - [Responsive/Fill Layout](#optional-parameters---fixedintrinsic-layout)
-
-  - [Image Link Parameters](#image-link-parameters)
-
-  - [Figure Parameters](#figure-parameters)
-
-  - [Hugo Image Processing](#optional-parameters---hugo-image-processing)
-
-- Global Configuration
-
-  - [General](#global-configuration)
-
-  - [Figure](#global-configuration---figure)
-
-  - [Lazy Loading JS Library](#global-configuration---lazy-loading-js-library)
-
-  - [Hugo Image Processing](#global-configuration---hugo-image-processing)
-
-- Installation
-
-  - As a module
-
-- Prerequisites
-
-- Sample usage
-
-  - Page bundle resource
-
-- Sample config
-
-  - YAML
-
-  - TOML
-
-- Noscript required HTML, JS and CSS
 
 ## Required Parameters
 
