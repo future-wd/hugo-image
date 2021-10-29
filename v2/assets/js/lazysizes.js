@@ -1,3 +1,4 @@
+// images which have the lazyloading class are invisible by default (so noscript works out of the box)
 // add js tag to <html> so that images are visible
 document.documentElement.classList.add('js');
 // import lazysizes
