@@ -313,7 +313,7 @@
 <figure class="{{ site.Params.image.figure.class }} hugo-img__figure">
 {{- end -}}  
 {{ with .link -}}
-  <a href="{{ . }}" {{ with $linkTarget }}target="{{ . }}"{{ end }} {{ with $linkRel }}rel="{{ . }}"{{ end }} {{ with $linkClass }}class="{{ . }}"{{ end }}>
+  <a href="{{ . }}" {{ with $linkTarget }}target="{{ . }}"{{ end }} {{ with $linkRel }}rel="{{ . }}"{{ end }} class="{{ $linkClass }} hugo-img__link">
 {{- end -}}
 <picture>
 {{- if $src -}}

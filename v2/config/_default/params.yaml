@@ -21,7 +21,7 @@ image:
     class:
     rel: 
     target: 
-    #css: 
+    css: 
   figure:
     class: figure # .figureCSS to target figures
     titleClass: h4

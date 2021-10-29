@@ -62,4 +62,9 @@
     // inject css properties from config file
     {{- site.Params.image.figure.css }}
   }
+
+  &__link {
+    // inject css properties from config file
+    {{- site.Params.image.link.css }}
+  }
 }
