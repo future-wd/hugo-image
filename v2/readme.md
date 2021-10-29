@@ -496,7 +496,7 @@ You must install lazysizes with `npm i lazysizes`
 
 - You must install the latest GoLang (minimum 1.12). See <https://golang.org/dl/>.
 - You must have a VCS client e.g. git. See <https://git-scm.com/downloads/>.
-- Install the latest hugo (at least 0.83.0)
+- Install the latest hugo EXTENDED (at least 0.83.0)
 
 ## Sample usage
 
@@ -509,38 +509,54 @@ You must install lazysizes with `npm i lazysizes`
 The first line can be omitted if using a params.yaml file. Defaults have been shown.
 
 ```YAML
-
-to be updated
+params:
+  image:
+    formats: ["original", "webp"]
+    loading: lazy
+    layout: responsive
+    objectFit: cover
+    minWidth: 500
+    maxWidth: 4000
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
+    #css: 
+    placeholder:
+      style: blur # empty | color | blur | solid (blur/solid js or inline type only)
+      type: js  # css | js | inline
+      blur:
+        amount: 3
+        size: 50
+      # nativePlaceholder: none or colour value
+      # libraryPlaceholder: blur, none, colour
+    link:
+      class:
+      rel: 
+      target: 
+      #css: 
+    figure:
+      class: figure # .figureCSS to target figures
+      titleClass: h4
+      imageClass: figure-img
+      figcaptionClass: figure-caption
+      attrLinkClass: ""
+      #css: 
+    lazyLibrary:
+      enable: false
+      dataSrcset: true
+      dataSrc: true
+      dataSizes: true
+      class: lazyload # can be array/slice
+      loadingClass: lazyloading
+      loadedClass: lazyloaded # used for blur-up
+      blurUp: true
+      #  imageCSS: "display:block;width:100%;" # add to css, but configure here?
+      #  figureCSS: "display:block!important;" # add to css, but configure here? img.image and figure.[figure.class] (takes )
+      # add to css 
+      # $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle
+      noscript: true
 
 ```
 
-### TOML
-
-### Noscript required HTML, JS and CSS
-
-The following elements are required for the `<noscript>` module to work. The script must come first.
-
-```HTML
-
-<html class="no-js">
-  <head>
-    <script>
-      document.documentElement.className = document.documentElement.className.replace("no-js", "js");
-    </script>
-    <title>Title</title>
-    <style>
-      /* can also be included in a css file */
-      .no-js img.lazyload {
-          display: none;
-        }
-    </style>
-  </head>
-  <body>
-
-  </body>
-</html>
-
-```
 
 # USE CASES
 
