@@ -519,27 +519,22 @@ params:
     maxWidth: 4000
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
-    #css: 
     placeholder:
       style: blur # empty | color | blur | solid (blur/solid js or inline type only)
       type: js  # css | js | inline
       blur:
         amount: 3
         size: 50
-      # nativePlaceholder: none or colour value
-      # libraryPlaceholder: blur, none, colour
     link:
       class:
       rel: 
       target: 
-      #css: 
     figure:
       class: figure # .figureCSS to target figures
       titleClass: h4
       imageClass: figure-img
       figcaptionClass: figure-caption
       attrLinkClass: ""
-      #css: 
     lazyLibrary:
       enable: false
       dataSrcset: true
@@ -549,14 +544,8 @@ params:
       loadingClass: lazyloading
       loadedClass: lazyloaded # used for blur-up
       blurUp: true
-      #  imageCSS: "display:block;width:100%;" # add to css, but configure here?
-      #  figureCSS: "display:block!important;" # add to css, but configure here? img.image and figure.[figure.class] (takes )
-      # add to css 
-      # $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle
       noscript: true
-
 ```
-
 
 # USE CASES
 
