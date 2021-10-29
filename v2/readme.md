@@ -519,6 +519,7 @@ params:
     maxWidth: 4000
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
+    css: #css properties for the images
     placeholder:
       style: blur # empty | color | blur | solid (blur/solid js or inline type only)
       type: js  # css | js | inline
@@ -529,14 +530,16 @@ params:
       class:
       rel: 
       target: 
+      css: 
     figure:
       class: figure # .figureCSS to target figures
       titleClass: h4
       imageClass: figure-img
       figcaptionClass: figure-caption
-      attrLinkClass: ""
+      attrLinkClass:
+      css: 
     lazyLibrary:
-      enable: false
+      enable: true
       dataSrcset: true
       dataSrc: true
       dataSizes: true
@@ -544,6 +547,8 @@ params:
       loadingClass: lazyloading
       loadedClass: lazyloaded # used for blur-up
       blurUp: true
+      imageCSS: "display:block;width:100%;"
+      figureCSS: "display:block!important;"
       noscript: true
 ```
 

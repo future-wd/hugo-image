@@ -57,10 +57,18 @@
 
   // inject css properties from config file
   {{- site.Params.image.css }}
+  // injust lazy library css
+  {{ if eq site.params.image.lazyLibrary.enable true }}
+    {{- site.Params.image.lazyLibrary.imageCSS }}
+  {{ end }}
 
   &__figure {
     // inject css properties from config file
     {{- site.Params.image.figure.css }}
+    // injust lazy library css
+    {{ if eq site.params.image.lazyLibrary.enable true }}
+      {{- site.Params.image.lazyLibrary.figureCSS }}
+    {{ end }}
   }
 
   &__link {

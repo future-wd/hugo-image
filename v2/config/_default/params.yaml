@@ -27,10 +27,10 @@ image:
     titleClass: h4
     imageClass: figure-img
     figcaptionClass: figure-caption
-    attrLinkClass: ""
+    attrLinkClass:
     css: 
   lazyLibrary:
-    enable: false
+    enable: true
     dataSrcset: true
     dataSrc: true
     dataSizes: true
@@ -38,8 +38,6 @@ image:
     loadingClass: lazyloading
     loadedClass: lazyloaded # used for blur-up
     blurUp: true
-    #  imageCSS: "display:block;width:100%;" # add to css, but configure here?
-    #  figureCSS: "display:block!important;" # add to css, but configure here? img.image and figure.[figure.class] (takes )
-    # add to css 
-    # $lazyLibraryFigureStyle := site.Params.image.lazyLibrary.figureStyle
+    imageCSS: "display:block;width:100%;"
+    figureCSS: "display:block!important;"
     noscript: true
