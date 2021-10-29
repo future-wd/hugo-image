@@ -310,7 +310,7 @@
 {{ $linkRel := .linkRel | default site.Params.imgage.link.rel }}
 {{ $linkTarget := .linkTarget | default site.Params.imgage.link.target }}
 {{- if .figure -}}
-<figure class="{{ site.Params.image.figure.class }}">
+<figure class="{{ site.Params.image.figure.class }} hugo-img__figure">
 {{- end -}}  
 {{ with .link -}}
   <a href="{{ . }}" {{ with $linkTarget }}target="{{ . }}"{{ end }} {{ with $linkRel }}rel="{{ . }}"{{ end }} {{ with $linkClass }}class="{{ . }}"{{ end }}>

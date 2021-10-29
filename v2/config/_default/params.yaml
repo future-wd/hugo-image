@@ -8,7 +8,7 @@ image:
   maxWidth: 4000
   deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
   imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
-  #css: 
+  css: #css properties for the images
   placeholder:
     style: blur # empty | color | blur | solid (blur/solid js or inline type only)
     type: js  # css | js | inline
@@ -28,7 +28,7 @@ image:
     imageClass: figure-img
     figcaptionClass: figure-caption
     attrLinkClass: ""
-    #css: 
+    css: 
   lazyLibrary:
     enable: false
     dataSrcset: true

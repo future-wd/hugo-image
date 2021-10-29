@@ -44,7 +44,6 @@
     display: inline;
   }
   
-
   &.blur-up {
     -webkit-filter: blur(5px);
     filter: blur(5px);
@@ -54,5 +53,13 @@
   &.blur-up.{{- site.Params.image.lazyLibrary.loadedClass }} {
     -webkit-filter: blur(0);
     filter: blur(0);
+  }
+
+  // inject css properties from config file
+  {{- site.Params.image.css }}
+
+  &__figure {
+    // inject css properties from config file
+    {{- site.Params.image.figure.css }}
   }
 }
