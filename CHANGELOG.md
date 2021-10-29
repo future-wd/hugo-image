@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.4](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2021-10-29)
+
+
+### Features
+
+* conditionally inject  lazyLibrary css into img and fig ([7df6b43](/github.com/powerfulweb/hugo-image/commit/7df6b432a53c0daac1188761f659359e3fd8ccf3))
+* css can be injected into figure tag class ([f0dfbbf](/github.com/powerfulweb/hugo-image/commit/f0dfbbf3f73f91cf963917a1b917a98e9a688eb3))
+* inject css props into link tag ([79f45a9](/github.com/powerfulweb/hugo-image/commit/79f45a95c9c052eaca1e35f823de0d2e748fbebf))
+
+
+### Bug Fixes
+
+* add comment ([525b9a8](/github.com/powerfulweb/hugo-image/commit/525b9a8bd2dc61ca0edf0cb1c9054e9fe202bb32))
+* added example code ([eb8b1a0](/github.com/powerfulweb/hugo-image/commit/eb8b1a05a829897db12e12092b08024d36142b6c))
+
 ## [2.0.0-alpha.3](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2021-10-28)
 
 
