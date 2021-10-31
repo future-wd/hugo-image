@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.5](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2021-10-31)
+
+
+### Bug Fixes
+
+* conditionally inject styles, chance bem structure ([b0c1caf](/github.com/powerfulweb/hugo-image/commit/b0c1caff2c4cc0c839aa0c0ff44b3f6fe674815e))
+
 ## [2.0.0-alpha.4](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2021-10-29)
 
 
