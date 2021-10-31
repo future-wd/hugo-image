@@ -283,7 +283,7 @@
 {{- end -}}
 {{- /* add related BEM image classes */ -}}
 {{- $scratch.Add "class" "hugo-img" -}}
-{{- $scratch.Add "class" (slice (printf "hugo-img__%s" $layout)) -}}
+{{- $scratch.Add "class" (slice (printf "hugo-img--%s" $layout)) -}}
 {{- if eq $layout "fill" -}}
   {{- $objectFit := .objectFit | default site.Params.image.objectFit -}}
   {{- $scratch.Add "class" (slice (printf "hugo-img__object-fit--%s" $objectFit)) -}}

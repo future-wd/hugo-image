@@ -21,14 +21,14 @@ image:
     class:
     rel: 
     target: 
-    css: 
+    css:
   figure:
     class: figure # .figureCSS to target figures
     titleClass: h4
     imageClass: figure-img
     figcaptionClass: figure-caption
     attrLinkClass:
-    css: 
+    css:
   lazyLibrary:
     enable: true
     dataSrcset: true
@@ -38,6 +38,6 @@ image:
     loadingClass: lazyloading
     loadedClass: lazyloaded # used for blur-up
     blurUp: true
-    imageCSS: "display:block;width:100%;"
+    imageCSS:
     figureCSS: "display:block!important;"
     noscript: true

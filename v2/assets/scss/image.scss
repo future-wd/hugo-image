@@ -1,19 +1,19 @@
 .hugo-img {
-  &__responsive {
+  &--responsive {
     width: 100%;
     height: auto;
   }
 
-  &__fixed {
+  &--fixed {
     //empty
   }
 
-  &__intrinsic {
+  &--intrinsic {
     max-width: 100%;
     height: auto;
   }
 
-  &__fill {
+  &--fill {
     height:100%;
     width:100%;
   }
@@ -55,24 +55,24 @@
     filter: blur(0);
   }
 
-  // inject css properties from config file
-  {{- site.Params.image.css }}
-  // injust lazy library css
-  {{ if eq site.params.image.lazyLibrary.enable true }}
-    {{- site.Params.image.lazyLibrary.imageCSS }}
+  // inject css properties from config file image css
+  {{ with site.Params.image.css }}{{ . }}{{ end }}
+  // injectt lazy library css if lazylibrary is enabled
+  {{ if eq site.Params.image.lazyLibrary.enable true }}
+    {{ with site.Params.image.lazyLibrary.imageCSS }}{{ . }}{{ end }}
   {{ end }}
 
   &__figure {
-    // inject css properties from config file
-    {{- site.Params.image.figure.css }}
-    // injust lazy library css
-    {{ if eq site.params.image.lazyLibrary.enable true }}
-      {{- site.Params.image.lazyLibrary.figureCSS }}
+    // inject css properties from config file fig css
+    {{ with site.Params.image.figure.css }}{{ . }}{{ end }}
+    // injectt lazy library css if lazylibrary is enabled
+    {{ if eq site.Params.image.lazyLibrary.enable true }}
+      {{ with site.Params.image.lazyLibrary.figureCSS }}{{ . }}{{ end }}
     {{ end }}
   }
 
   &__link {
-    // inject css properties from config file
-    {{- site.Params.image.link.css }}
+    // inject css properties from config file link css
+    {{ with site.Params.image.link.css }}{{ . }}{{ end }}
   }
 }
