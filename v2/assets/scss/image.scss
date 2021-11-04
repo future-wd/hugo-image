@@ -1,3 +1,4 @@
+// prefixed for last 5 versions using autoprefixer
 .hugo-img {
   &--responsive {
     width: 100%;
@@ -21,6 +22,7 @@
   &__object-fit {
     @each $fit in fill, contain, cover, none, scale-down {
       &--#{$fit} {
+        -o-object-fit: $fit;
         object-fit: $fit;
       }
     }
@@ -30,16 +32,19 @@
     @each $x in left, center, right {
       @each $y in top, center, bottom {
         &--#{$x}-#{$y} {
+          -o-object-position: $x $y;
           object-position: $x $y;
         }
       }
     }
   }
 
+  // default .hugo-img.lazyload
   &.{{- site.Params.image.lazyLibrary.class }} {
     display: none;
   }
 
+  // <html class="js"> defaults .hugo-img.lazyload, .hugo-img.lazyloading, .hugo-img.lazyloaded
   .js &.{{- site.Params.image.lazyLibrary.class }}, &.{{- site.Params.image.lazyLibrary.LoadingClass }}, &.{{- site.Params.image.lazyLibrary.LoadedClass }}  {
     display: inline;
   }
@@ -47,9 +52,14 @@
   &.blur-up {
     -webkit-filter: blur(5px);
     filter: blur(5px);
-    transition: filter 400ms, -webkit-filter 400ms;
+    -webkit-transition: -webkit-filter 400ms;
+    transition: -webkit-filter 400ms;
+    -o-transition: filter 400ms;
+    transition: filter 400ms;
+    transition: filter 400ms, -webkit-filter 400ms
   }
 
+  // default .hugo-img.blur-up.lazyloaded
   &.blur-up.{{- site.Params.image.lazyLibrary.loadedClass }} {
     -webkit-filter: blur(0);
     filter: blur(0);
