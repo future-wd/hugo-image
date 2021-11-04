@@ -1,11 +1,11 @@
 {{- $src := resources.Get "scss/image.scss" -}}
 {{- $src = $src | resources.ExecuteAsTemplate "image.css" .  -}}
 {{ if eq (hugo.Environment) "development" -}}
-  {{ $options := (dict "targetPath" "css/image.css" "transpiler" "libsass" "enableSourceMap" true "includePaths" (slice "node_modules")) -}}
+  {{ $options := (dict "targetPath" "css/image.css" "transpiler" "libsass" "enableSourceMap" true) -}}
   {{ $src = $src | toCSS $options | resources.Fingerprint -}}
 {{ else -}}
-  {{ $options := (dict "targetPath" "css/image.css" "transpiler" "libsass" "outputStyle" "compressed" "includePaths" (slice "node_modules")) -}}
-  {{ $src = $src | toCSS $options | postCSS (dict "config" "config/postcss.config.js") | resources.Fingerprint -}}
+  {{ $options := (dict "targetPath" "css/image.css" "transpiler" "libsass" "outputStyle" "compressed") -}}
+  {{ $src = $src | toCSS $options | resources.Fingerprint -}}
 {{ end -}}
 <link rel="stylesheet" href="{{ $src.Permalink | relURL }}" integrity="{{ $src.Data.Integrity }}" crossorigin="anonymous">
 
