@@ -289,12 +289,12 @@
   {{- $scratch.Add "class" "blur-up" -}}
 {{- end -}}
 {{- /* add .class if its a slice, otherwise add (slice .class) */ -}}
-{{- if .class -}}
-  {{- if reflect.IsArray .class -}}
-    {{- $scratch.Add "class" .class -}}
+{{- with .class -}}
+  {{- if reflect.IsSlice . -}}
+    {{- $scratch.Add "class" . -}}
   {{- else -}}
-    {{- $scratch.Add "class" (slice .class) -}}
-  {{- end -}}
+    {{- $scratch.Add "class" (slice .) -}}
+  {{- end -}} 
 {{- end -}}
 {{- /* add related BEM image classes */ -}}
 {{- $scratch.Add "class" "hugo-img" -}}
