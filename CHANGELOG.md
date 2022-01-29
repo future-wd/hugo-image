@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.7](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2022-01-29)
+
+
+### Bug Fixes
+
+* nest scss ([aeba517](/github.com/powerfulweb/hugo-image/commit/aeba517d074be81d1cbcd987bedfa79117117f8b))
+
 ## [2.0.0-alpha.6](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2021-11-04)
 
 
