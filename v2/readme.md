@@ -488,7 +488,7 @@ In the head use the following partial
 
 Either import yourself or use the following partial in the head
 
-`{{- partial "image/lazysizes" . -}}`
+`{{- partial "image/js" . -}}`
 
 You must install lazysizes with `npm i lazysizes`
 
@@ -602,7 +602,7 @@ image:
 
 - Lazysizes is configured to utilise native lazy loading if its available in the browser
 
-- You must import the lazysizes.html partial in the documents head
+- You must import the image/js.html partial in the documents head
 
 - You must run `npm install lazysizes` to install lazysizes as a project dependency
 

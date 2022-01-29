@@ -56,7 +56,7 @@
     transition: -webkit-filter 400ms;
     -o-transition: filter 400ms;
     transition: filter 400ms;
-    transition: filter 400ms, -webkit-filter 400ms
+    transition: filter 400ms, -webkit-filter 400ms;
 
     // default .hugo-img.blur-up.lazyloaded
     &.{{- site.Params.image.lazyLibrary.loadedClass }} {

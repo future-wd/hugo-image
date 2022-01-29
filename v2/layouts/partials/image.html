@@ -273,6 +273,21 @@
 {{- end -}}
 {{- /*  set class scratch to array/slice */ -}}
 {{ $scratch.Set "class" slice }}
+{{- /* add lazyload library classe(s) */ -}}
+{{- $lazyLibraryClass := "" -}}
+{{- $lazyLibrary := .lazyLibrary | default site.Params.image.lazyLibrary.enable -}}
+{{- if eq $lazyLibrary true -}}
+  {{- $lazyLibraryClass = site.Params.image.lazyLibrary.class  -}}
+  {{- if reflect.IsSlice site.Params.image.lazyLibrary.class -}}
+    {{- $lazyLibraryClass = delimit site.Params.image.lazyLibrary.class " "  -}}
+  {{- end -}}
+{{- end -}}
+{{- with $lazyLibraryClass -}}
+{{- $scratch.Add "class" . -}}
+{{- end -}}
+{{- if eq site.Params.image.lazyLibrary.blurUp true -}}
+  {{- $scratch.Add "class" "blur-up" -}}
+{{- end -}}
 {{- /* add .class if its a slice, otherwise add (slice .class) */ -}}
 {{- if .class -}}
   {{- if reflect.IsArray .class -}}
@@ -288,21 +303,13 @@
   {{- $objectFit := .objectFit | default site.Params.image.objectFit -}}
   {{- $scratch.Add "class" (slice (printf "hugo-img__object-fit--%s" $objectFit)) -}}
   {{- with .objectPosition -}}
-    {{- $objectPosition = "object-position:%d;" . -}}
-    {{- $scratch.Add "class" (slice (printf "hugo-img__object-position--%s" $objectPosition)) -}}
+    <!-- {{- $objectPosition = "object-position:%d;" . -}} -->
+    {{- $scratch.Add "class" (slice (printf "hugo-img__object-position--%s" .)) -}}
   {{- end }}
 {{- end -}}
 {{- /* delimit scratch.class into space separated string */ -}}
 {{- $class := $scratch.Get "class" -}}
 {{- $class = delimit $class " " -}}
-{{- $lazyLibraryClass := "" -}}
-{{- $lazyLibrary := .lazyLibrary | default site.Params.image.lazyLibrary.enable -}}
-{{- if eq $lazyLibrary true -}}
-  {{- $lazyLibraryClass = site.Params.image.lazyLibrary.class  -}}
-  {{- if reflect.IsSlice site.Params.image.lazyLibrary.class -}}
-    {{- $lazyLibraryClass = delimit site.Params.image.lazyLibrary.class " "  -}}
-  {{- end -}}
-{{- end -}}
 {{- /*  
   * OUTPUT HTML  
   */ -}}
@@ -337,7 +344,7 @@
   <img 
     alt="{{ $alt }}" 
     title="{{ $.title }}"
-    class="{{- $class }} {{ $lazyLibraryClass }} {{if eq site.Params.image.lazyLibrary.blurUp true }}blur-up{{ end }}" 
+    class="{{- $class }}" 
     {{- if or $.style $inlinePlaceholder }}
       style="{{- $.style | safeCSS -}}{{- $inlinePlaceholder | safeCSS -}}"
     {{- end }}
