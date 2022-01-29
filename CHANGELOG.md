@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.8](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2022-01-29)
+
 ## [2.0.0-alpha.7](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2022-01-29)
 
 
