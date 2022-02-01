@@ -1,7 +1,7 @@
 // prefixed for last 5 versions using autoprefixer
 .hugo-img {
   &--responsive {
-    width: 100%;
+    max-width: 100%;
     height: auto;
   }
 
