@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.10](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.9...v2.0.0-alpha.10) (2022-02-01)
+
+
+### Bug Fixes
+
+* responsive class max-wdith ([abc04d8](/github.com/powerfulweb/hugo-image/commit/abc04d85cfa87b1187b6f074b8538ef73174ab49))
+
 ## [2.0.0-alpha.8](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2022-01-29)
 
 ## [2.0.0-alpha.7](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2022-01-29)
