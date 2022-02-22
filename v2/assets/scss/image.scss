@@ -1,8 +1,10 @@
 // prefixed for last 5 versions using autoprefixer
 .hugo-img {
   &--responsive {
-    max-width: 100%;
+    width: 100%;
     height: auto;
+    // // display: inline;
+    // display: block;
   }
 
   &--fixed {
@@ -45,11 +47,12 @@
   }
 
   // <html class="js"> defaults to .js .hugo-img.lazyload, .hugo-img.lazyloading, .hugo-img.lazyloaded
-  .js &.{{- site.Params.image.lazyLibrary.class }}, &.{{- site.Params.image.lazyLibrary.LoadingClass }}, &.{{- site.Params.image.lazyLibrary.LoadedClass }}  {
-    display: inline;
+  .js &.{{- site.Params.image.lazyLibrary.class }}, &.{{- site.Params.image.lazyLibrary.loadingClass }}, &.{{- site.Params.image.lazyLibrary.loadedClass }}  {
+    // display: inline;
+    display: block;
   }
   
-  &.blur-up {
+  &--blur-up {
     -webkit-filter: blur(5px);
     filter: blur(5px);
     -webkit-transition: -webkit-filter 400ms;
@@ -58,11 +61,16 @@
     transition: filter 400ms;
     transition: filter 400ms, -webkit-filter 400ms;
 
-    // default .hugo-img.blur-up.lazyloaded
+    // default .hugo-img--blur-up.lazyloaded
     &.{{- site.Params.image.lazyLibrary.loadedClass }} {
       -webkit-filter: blur(0);
       filter: blur(0);
     }
+  }
+
+  // defaults to .hugo-img.lazyautosizes
+  &.{{- site.Params.image.lazyLibrary.autoSizesClass }} {
+
   }
 
   // inject css properties from config file image css
@@ -85,4 +93,10 @@
     // inject css properties from config file link css
     {{ with site.Params.image.link.css }}{{ . }}{{ end }}
   }
+}
+
+// lazysizes compadibility
+img[data-sizes="auto"] { 
+  display: block !important; 
+  width: 100% !important; 
 }

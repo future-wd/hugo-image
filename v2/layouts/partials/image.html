@@ -111,7 +111,7 @@
 {{- /* only calcuate responsive image withs if src image is to be responsive or fixed layout */ -}}
 {{- $widths := slice -}}
 {{- if or (eq $layout "responsive") (eq $layout "fill") -}}
-  {{- with .widths -}}
+  {{- with $.widths -}}
     {{- $widths = . -}}
   {{- else -}}
     {{- /*  used for layout responsive/fill next/image */ -}}
@@ -286,7 +286,7 @@
 {{- $scratch.Add "class" . -}}
 {{- end -}}
 {{- if eq site.Params.image.lazyLibrary.blurUp true -}}
-  {{- $scratch.Add "class" "blur-up" -}}
+  {{- $scratch.Add "class" "hugo-img--blur-up" -}}
 {{- end -}}
 {{- /* add .class if its a slice, otherwise add (slice .class) */ -}}
 {{- with .class -}}
@@ -360,7 +360,7 @@
       {{ end -}}
         {{- /* dont add sizes attribute if fixed or intrinsic image as it only uses 1x, 2x */ -}}
       {{- if or (eq $layout "responsive") (eq $layout "fill") }}
-        {{- if and (eq $lazyLibrary true) (eq site.Params.image.lazyLibrary.dataSrcset true) -}}
+        {{- if and (not $.sizes) (and (eq $lazyLibrary true) (eq site.Params.image.lazyLibrary.dataSrcset true)) -}}
           data-sizes="auto"
         {{- else -}}
           sizes="{{ $.sizes | default "100vw" }}"

@@ -36,6 +36,7 @@ image:
     class: lazyload # can be array/slice
     loadingClass: lazyloading
     loadedClass: lazyloaded # used for blur-up
+    autoSizesClass: lazyautosizes
     blurUp: true
     imageCSS:
     figureCSS: "display:block!important;"
