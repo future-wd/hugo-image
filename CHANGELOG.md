@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.11](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2022-02-22)
+
+
+### Bug Fixes
+
+* can override lazysizes sizes ([2bb1707](/github.com/powerfulweb/hugo-image/commit/2bb1707ea208d89e62b42ab0b2072de001fa81e1))
+
 ## [2.0.0-alpha.10](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.9...v2.0.0-alpha.10) (2022-02-01)
 
 
