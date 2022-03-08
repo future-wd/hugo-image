@@ -1,7 +1,11 @@
-{{- /*  local scratch  */ -}}
+  {{- /*  local scratch  */ -}}
 {{ $scratch := newScratch }}
 {{- /* check if .src is a page resource */ -}}
 {{- $src := .page.Resources.GetMatch (printf "**%s*" .src) -}}
+{{- /* error message if .src not matched */ -}}
+{{- if not $src }}
+  {{- warnf "No image resource found at %s%s" .page.RelPermalink .src -}}
+{{- end -}}
 {{- /*
   * Image params config
   */ -}}
