@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.12](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.11...v2.0.0-alpha.12) (2022-03-08)
+
+
+### Features
+
+* add error message for no source ([6956b90](/github.com/powerfulweb/hugo-image/commit/6956b9047252e926e7ec9470af921e44e74d4e81))
+
 ## [2.0.0-alpha.11](/github.com/powerfulweb/hugo-image/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2022-02-22)
 
 
