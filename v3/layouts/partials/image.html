@@ -76,6 +76,7 @@
     {{- warnf "Invalid .anchor of %v (%s). Valid .anchor options are %s" . $img.RelPermalink (delimit $anchorOpts ", ") -}}
   {{- end -}}
 {{- end -}}
+{{- /* ----------------------------- */ -}}
 {{- /* generate images at each width */ -}}
 {{- range $index, $width := $widths -}}
   {{- $imgResizedOrig := "" -}}
@@ -99,7 +100,6 @@
     {{- $imgResizedOrig = $img.Resize (printf "%dx %s" $width.width $options) -}}
     {{- $imgResizedWebp = $img.Resize (printf "%dx webp %s %s" $width.width $options $.hint) -}}
   {{- end -}}
-  
   {{- /* add image to srcset array/slice with format "/path/image.jpg 100w" */ -}}
   {{- $srcsetOrig = $srcsetOrig | append (printf "%s %s" $imgResizedOrig.RelPermalink $width.desc) -}}
   {{- $srcsetWebp = $srcsetWebp | append (printf "%s %s" $imgResizedWebp.RelPermalink $width.desc) -}}
@@ -118,15 +118,26 @@
 {{- /* convert srcset array/slice into a string, delimit with , between each image */ -}}
 {{- $srcsetOrig = delimit $srcsetOrig ", " -}}
 {{- $srcsetWebp = delimit $srcsetWebp ", " -}}
-{{- /* generate default title */ -}}
+{{- /* --------------------- */ -}}
+{{- /* picture tag variables */ -}}
 {{- $title := .page.Title -}}
 {{- if .title -}}
   {{- $title = .title -}}
 {{- else if .figureTitle -}}
   {{- $title = .figureTitle -}}
 {{- end -}}
+{{- $sizes := "" -}}
+{{- if site.Params.image.lazysizes -}}
+  {{- $sizes = "auto" }}
+{{- else -}}
+  {{ $sizes = .sizes | default "100vw" }}
+{{- end -}}
+{{- $class := .class | default site.Params.image.class -}}
+{{- if site.Params.image.lazysizes -}}
+  {{- $class = print $class " " "lazysizes" -}}
+{{- end -}}
+{{- /* -------------------- */ -}}
 {{- /* generate picture tag */ -}}
-
 <picture>
   <source srcset="{{ $srcsetWebp }}" type="image/webp">
   <source srcset="{{ $srcsetOrig }}" type="{{ $src.MediaType }}">
@@ -136,6 +147,6 @@
     title="{{ $title }}"
     height="{{ $src.Height }}" 
     width="{{ $src.Width }}"
-    class="{{ .class | default site.Params.image.class }}"
-    sizes="{{ .sizes | default "100vw" }}">
+    class="{{ $class }}"
+    sizes="{{ $sizes }}">
 </picture>
