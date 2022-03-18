@@ -3,3 +3,4 @@ image:
   densities: [1,2]
   class: img-fluid
   figureClass: figure
+  lazysizes: true

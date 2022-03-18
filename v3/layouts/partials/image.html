@@ -16,8 +16,7 @@
 {{- end -}}
 {{/* if .width present for pixel density srcset */}}
 {{- if .width -}}
-  {{- $defaultDensities := site.Params.image.densities | default (slice 1 2) -}}
-  {{- $densities := .densities | default $defaultDensities -}}
+  {{- $densities := .densities | default site.Params.image.densities -}}
   {{- $densities = sort $densities -}}
   {{- range $density := $densities }}
     {{- $widths = $widths | append (slice 
@@ -29,8 +28,7 @@
   {{- end -}}
 {{- else -}}
 {{/* else produce responsive srcset */}}
-  {{- $defaultWidths := site.Params.image.widths | default (slice 500 800 1200) }}
-  {{- $userWidths := .widths | default $defaultWidths -}}
+  {{- $userWidths := .widths | default site.Params.image.widths -}}
   {{- $userWidths = sort $userWidths -}}
   {{- range $userWidth := $userWidths }}
     {{- $widths = $widths | append (slice 
@@ -128,6 +126,7 @@
   {{- $title = .figureTitle -}}
 {{- end -}}
 {{- /* generate picture tag */ -}}
+
 <picture>
   <source srcset="{{ $srcsetWebp }}" type="image/webp">
   <source srcset="{{ $srcsetOrig }}" type="{{ $src.MediaType }}">
@@ -137,6 +136,6 @@
     title="{{ $title }}"
     height="{{ $src.Height }}" 
     width="{{ $src.Width }}"
-    class="{{ .class | default ( site.Params.image.class | default "img-fluid") }}"
+    class="{{ .class | default site.Params.image.class }}"
     sizes="{{ .sizes | default "100vw" }}">
 </picture>
