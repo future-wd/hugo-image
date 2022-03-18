@@ -1,0 +1,54 @@
+{{- /* set variables */ -}}
+{{- $figureClass := "" -}}
+{{- $link := "" -}}
+{{- $rel := "" -}}
+{{- $target := "" -}}
+{{- $figureTitle := "" -}}
+{{- $caption := "" -}}
+{{- $attr := "" -}}
+{{- $attrLink := "" -}}
+{{- /* check for named params in shortcode */ -}}
+{{- with (.Get "figureClass") -}}
+  {{- $figureClass = .}}
+{{- end -}}
+{{- with (.Get "link") -}}
+  {{- $link = .}}
+{{- end -}}
+{{- with (.Get "rel") -}}
+  {{- $rel = .}}
+{{- end -}}
+{{- with (.Get "target") -}}
+  {{- $target = .}}
+{{- end -}}
+{{- with (.Get "figureTitle") -}}
+  {{- $figureTitle = .}}
+{{- end -}}
+{{- with (.Get "caption") -}}
+  {{- $caption = .}}
+{{- end -}}
+{{- with (.Get "attr") -}}
+  {{- $attr = .}}
+{{- end -}}
+{{- with (.Get "attrLink") -}}
+  {{- $attrLink = .}}
+{{- end -}}
+{{- /* assign variables to dict */ -}}
+{{- $dict := (dict 
+"figureClass" $figureClass
+"link" $link
+"rel" $rel
+"target" $target
+"figureTitle" $figureTitle
+"caption" $caption
+"attr" $attr
+"attrLink" $attrLink
+) -}}
+{{- /* call image partial, and use defaults for everything else */ -}}
+<div class="row d-flex justify-content-center">
+  <div class="col-md-9 d-flex justify-content-center">
+    {{ partial "exercises/figure-a" $dict }}
+    {{ partial "exercises/image-shortcode.html" . }}
+    {{ partial "exercises/figure-b" $dict }}
+  </div>
+</div>
+

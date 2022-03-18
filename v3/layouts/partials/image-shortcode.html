@@ -1,0 +1,93 @@
+{{- /* set variables */ -}}
+{{- $title := "" -}}
+{{- $alt := "" -}}
+{{- $src := "" -}}
+{{- $width := "" -}}
+{{- $widths := slice -}}
+{{- $densities := slice -}}
+{{- $fillRatio := slice -}}
+{{- $quality := "" -}}
+{{- $rotate := "" -}}
+{{- $resampleFilter := "" -}}
+{{- $hint := "" -}}
+{{- $anchor := "" -}}
+{{- $sizes := "" -}}
+{{- $class := "" -}}
+{{- /* check for named params in shortcode */ -}}
+{{- if .IsNamedParams -}}
+  {{- with (.Get "src") -}}
+    {{- $src = .}}
+  {{- end -}}
+  {{- with (.Get "alt") -}}
+    {{- $alt = .}}
+  {{- end -}}
+  {{- with (.Get "title") -}}
+    {{- $title = .}}
+  {{- end -}}
+  {{- with (.Get "width") -}}
+    {{- $width = . | int }}
+  {{- end -}}
+  {{- with (.Get "widths") -}}
+    {{- $splitWidths := split . "," -}}
+    {{- range $splitWidths }}
+      {{ $widths = $widths | append ( . | int )}}
+    {{- end -}}
+  {{- end -}}
+  {{- with (.Get "densities") -}}
+    {{- $splitDensities := split . "," -}}
+    {{- range $splitDensities }}
+      {{ $densities = $densities | append ( . | int )}}
+    {{- end -}}
+  {{- end -}}
+  {{- with (.Get "fillRatio") -}}
+    {{- $splitFillRatio = split . "," -}}
+    {{- range $splitFillRatio }}
+      {{ $fillRatio = $fillRatio | append ( . | int )}}
+    {{- end -}}
+  {{- end -}}
+  {{- with (.Get "quality") -}}
+    {{- $quality = .}}
+  {{- end -}}
+  {{- with (.Get "rotate") -}}
+    {{- $rotate = .}}
+  {{- end -}}
+    {{- with (.Get "resampleFilter") -}}
+    {{- $resampleFilter = .}}
+    {{- end -}}
+  {{- with (.Get "hint") -}}
+    {{- $hint = .}}
+  {{- end -}}
+  {{- with (.Get "anchor") -}}
+    {{- $anchor = .}}
+  {{- end -}}
+    {{- with (.Get "sizes") -}}
+  {{- $sizes = .}}
+    {{- end -}}
+  {{- with (.Get "class") -}}
+    {{- $class = .}}
+  {{- end -}}
+{{- else -}}
+{{- /* if only 1 un named param in shortcode */ -}}
+  {{- with (.Get 0) -}}
+    {{- $src = .}}
+  {{- end -}}
+{{- end -}}
+{{- /* assign variables to dict */ -}}
+{{- $dict := (dict
+  "page" .Page 
+  "src" $src
+  "title" $title
+  "alt" $alt
+  "width" $width
+  "widths" $widths
+  "densities" $densities
+  "fillRatio" $fillRatio
+  "quality" $quality
+  "rotate" $rotate
+  "resampleFilter" $resampleFilter
+  "hint" $hint
+  "anchor" $anchor
+  "sizes" $sizes
+  "class" $class
+) }}
+{{ partial "exercises/image" $dict }}
