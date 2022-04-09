@@ -265,16 +265,18 @@
 {{- /*  set placeholder  */ -}}
 {{- $placeholderType := site.Params.image.placeholder.type -}}
 {{- /* generate solid and blur placeholder for js and inline use */ -}}
-{{- if or (eq $placeholderType "js") (eq $placeholderType "inline") -}}
-  {{- /* get the width and height of the outputted image for placeholders */ -}}
-  {{- if eq $placeholderStyle "solid" -}}
-    {{- $placeholder = $src.Resize "1x gif" -}}
-  {{- else if eq $placeholderStyle "blur" -}}
-    {{- $placeholder = $src.Resize (printf "%vx gif" site.Params.image.placeholder.blur.size) -}} 
-    {{- $placeholder = $placeholder.Filter (images.GaussianBlur site.Params.image.placeholder.blur.amount) -}}
+{{ if not (eq $placeholderStyle "empty") }}
+  {{- if or (eq $placeholderType "js") (eq $placeholderType "inline") -}}
+    {{- /* get the width and height of the outputted image for placeholders */ -}}
+    {{- if eq $placeholderStyle "solid" -}}
+      {{- $placeholder = $src.Resize "1x gif" -}}
+    {{- else if eq $placeholderStyle "blur" -}}
+      {{- $placeholder = $src.Resize (printf "%vx gif" site.Params.image.placeholder.blur.size) -}} 
+      {{- $placeholder = $placeholder.Filter (images.GaussianBlur site.Params.image.placeholder.blur.amount) -}}
+    {{- end -}}
+    {{- $placeholder = printf "data:image/gif;base64,%s" ($placeholder.Content | base64Encode) -}}
   {{- end -}}
-  {{- $placeholder = printf "data:image/gif;base64,%s" ($placeholder.Content | base64Encode) -}}
-{{- end -}}
+{{ end }}
 {{- /* generate inline placeholder style */ -}}
 {{- $inlinePlaceholder := ""}}
 {{- if and (eq site.Params.image.placeholder.type "inline") (or (eq site.Params.image.placeholder.style "solid") (eq site.Params.image.placeholder.style "blur") ) -}}
