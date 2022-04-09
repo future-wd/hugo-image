@@ -1,8 +1,8 @@
   {{- /*  local scratch  */ -}}
 {{ $scratch := newScratch }}
 {{ $src := "" }}
-{{ if .global }}
-  {{ $src = .global }}
+{{ if not .page }}
+  {{ $src = resources.Get .src }}
 {{ else }}
   {{- /* check if .src is a page resource */ -}}
   {{- $src = .page.Resources.GetMatch (printf "**%s*" .src) -}}
