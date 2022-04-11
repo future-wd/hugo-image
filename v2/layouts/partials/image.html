@@ -197,7 +197,7 @@
     {{- $imgMap := dict -}}
     {{- range $indexWidth, $width := $widths -}} 
       {{- /*  only if src image is equal or greater than resize width  */ -}}
-      {{- if ge $src.Width $width -}}   
+      {{- /* if ge $src.Width $width */ -}}   
       {{- $resize := "" -}}
         {{- /*  set/calculate $fillHeight. fill ratio takes presedence */ -}}
         {{- $fillHeight := 0 -}}
@@ -237,7 +237,7 @@
         {{- /* array of widths for responsive/fill */ -}}
         {{- $srcset = $srcset | append (printf "%s %dw" $resize.RelPermalink $width) -}}
         {{- end -}}
-      {{- end -}}
+      {{- /* end */ -}}
       {{- /* end width resizing range */ -}}
     {{- end -}}
     {{- /* change array into string delimited by , */ -}}
