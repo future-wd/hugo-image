@@ -1,5 +1,12 @@
 {{- /* set variables */ -}}
-{{- $img := .page.Resources.GetMatch $.src -}}
+{{- $img := "" }}
+{{- if .page -}}
+  {{- /* page resource */ -}}
+  {{- $img = .page.Resources.GetMatch .src -}}
+{{- else -}}
+  {{- /* global resource */ -}}
+  {{- $img = resources.Get .src -}}
+{{- end -}}
 {{- if not $img }}
   {{- warnf "No image resource found at %s%s" .page.RelPermalink .src -}}
 {{- end -}}
