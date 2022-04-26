@@ -146,10 +146,28 @@
 {{- /* -------------------- */ -}}
 {{- /* generate picture tag */ -}}
 <picture>
-  <source srcset="{{ $srcsetWebp }}" type="image/webp">
-  <source srcset="{{ $srcsetOrig }}" type="{{ $src.MediaType }}">
+  <source 
+    {{/* if eq .loading "auto" }}
+    srcset="{{ $srcsetWebp }}" 
+    {{ else }}
+    data-srcset="{{ $srcsetWebp }}" 
+    {{ end */}}
+    srcset="{{ $srcsetWebp }}" 
+    type="image/webp">
+  <source 
+    {{/* if eq .loading "auto" }}
+    srcset="{{ $srcsetOrig }}" 
+    {{ else }}
+    data-srcset="{{ $srcsetOrig }}" 
+    {{ end */}} 
+    srcset="{{ $srcsetOrig }}" 
+    type="{{ $src.MediaType }}">
   <img 
+    {{ if eq .loading "auto" }}
     src="{{ $src.RelPermalink }}" 
+    {{ else }}
+    data-src="{{ $src.RelPermalink }}" 
+    {{ end }}
     alt="{{ .alt | default ( (.caption | markdownify | plainify) | default (printf "Image of %s" $title)) }}" 
     title="{{ $title }}"
     height="{{ $src.Height }}" 
