@@ -134,37 +134,38 @@
   {{- $title = .figureTitle -}}
 {{- end -}}
 {{- $sizes := "" -}}
-{{- if site.Params.image.lazysizes -}}
+{{ if .sizes }}
+  {{ $sizes = .sizes }}
+{{- else if site.Params.image.lazysizes -}}
   {{- $sizes = "auto" }}
 {{- else -}}
-  {{ $sizes = .sizes | default "100vw" }}
+  {{ $sizes = "100vw" }}
 {{- end -}}
 {{- $class := .class | default site.Params.image.class -}}
 {{- if site.Params.image.lazysizes -}}
-  {{- $class = print $class " " "lazysizes" -}}
+  {{- $class = print $class " " "lazyload" -}}
 {{- end -}}
 {{- /* -------------------- */ -}}
 {{- /* generate picture tag */ -}}
 <picture>
   <source 
-    {{/* if eq .loading "auto" }}
+    {{ if eq .loading "auto" }}
     srcset="{{ $srcsetWebp }}" 
     {{ else }}
     data-srcset="{{ $srcsetWebp }}" 
-    {{ end */}}
-    srcset="{{ $srcsetWebp }}" 
+    {{ end }}
     type="image/webp">
   <source 
-    {{/* if eq .loading "auto" }}
+    {{ if eq .loading "auto" }}
     srcset="{{ $srcsetOrig }}" 
     {{ else }}
     data-srcset="{{ $srcsetOrig }}" 
-    {{ end */}} 
-    srcset="{{ $srcsetOrig }}" 
+    {{ end }} 
     type="{{ $src.MediaType }}">
   <img 
     {{ if eq .loading "auto" }}
     src="{{ $src.RelPermalink }}" 
+    loading="auto"
     {{ else }}
     data-src="{{ $src.RelPermalink }}" 
     {{ end }}
