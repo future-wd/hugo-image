@@ -1,9 +1,101 @@
-# Hugo/image - next/image re-invented for hugo
+# Hugo responsive images
 
-## This readme is for version 1 (depreciated and not maintained)
+## This readme is for version 3
 ## [click here for version 2](https://github.com/future-wd/hugo-image/tree/master/v2)
 
+## Configuration
 
+All configuration items have been provided in the module. To override simply copy and paste the following into your own site config:
+
+```yaml
+params:
+  image:
+    widths: [600, 900, 1300]
+    # shortcodeWidths: [600, 900, 1300] # custom widths for shortcode use in markdown files
+    # renderHookWidths: [600, 900, 1300] # custom widths for render hook use in markdown files
+    densities: [1,2] # densities which are output when an image width is specified
+    class: img-fluid # default image class if no class is specified
+    figureClass: figure # default figure class
+    figcaptionClass: figure-caption # default figcaption class
+    figureImageClass: figure-img # default figure image class (appended to image class)
+    lazysizes: true # enable integration of the lazysizes js library
+    renderHook: true # set to false to disable included markdown image render hook
+```
+
+## Hugo image processing configuration options
+
+FIX
+
+## Usage as a layout partial
+
+The following example shows all configuration options. The only required option is "src".
+
+// style comments have been used for clarity
+
+### Fixed width, page resource
+
+```html
+{{ $opts := (dict
+  "page" . // the current page context if src is a page resource.
+  "src" "image.jpg" // relative to the current pages markdown file
+  "width" "300" // width in pixels if a fixed width image is desired.
+  // optional
+  "densities" (slice 1 2) // fill densities for fixed width image
+  )}}
+{{ partial "image" $opts }}
+```
+
+### Responsive width, global resource
+
+```html
+{{ $opts := (dict
+  "src" "images/image.jpg" // relative to the the assets folder as no page context has been provided
+  // optional 
+  "widths" (slice 400 800 1200) // override default responsive widths. 
+  "sizes" [string] // set the sizes property for the image tag, defaults to "100vw" or "auto" if lazysizes is enabled in the config and installed into the website
+  )}}
+{{ partial "image" $opts }}
+```
+
+### Cropping an image to an aspect ratio FIX
+
+```html
+  "fillRatio" (slice 4 3) // provide a height by width ratio as a slice if fill to ratio is desired 
+  "anchor" [string] // override default anchor for crop if fillRatio is set. options are "Smart" "Center" "TopLeft"
+```
+
+### Further options
+
+```html
+  "title" [string] // set the image title. If not set, figureTitle then the page's title will be used.
+  "alt" [string] // set the alt text. If not set the figure caption is used, else "Image of [title]" used.
+  "class" [string] // override the default image class
+  "rotate" [int] // provide an integer between 1-360 to rotate counter-clockwise
+  "loading" "auto" // remove lazyloading (either via lazysizes or stock browser functionality)
+  // override image processing configuration 
+  "resampleFilter" [string] // override default resample filter. Options are "Box" or "NearestNeighbor" or "Linear" or "Gaussian"
+  "quality" [int] // override default image compression quality, between 1-100
+  "hint" [string] // provide default hint for webp conversion. options are "Top" "TopRight" "Left" "Right" "BottomLeft" "Bottom" "BottomRight"
+```
+
+## Figure used as an layout partial
+
+FIX
+
+## Usage as a shortcode
+
+The shortcode accepts the same parameters with the following differences:
+
+* figure=true is used to enable figure behavior
+* arrays are expressed as strings delimited with commas e.g. widths="400,800"
+* the page context is not provided, its already available in the shortcode
+* to use a global resource you need to set global=true
+
+### Customizing shortcode behavior
+
+## Usage as a markdown render hook
+
+### Customizing markdown render hook behavior
 
 ## Required Parameters
 
