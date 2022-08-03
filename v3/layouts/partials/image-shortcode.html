@@ -1,93 +1,46 @@
-{{- /* set variables */ -}}
-{{- $title := "" -}}
-{{- $alt := "" -}}
-{{- $src := "" -}}
-{{- $width := "" -}}
-{{- $widths := slice -}}
-{{- $densities := slice -}}
-{{- $fillRatio := slice -}}
-{{- $quality := "" -}}
-{{- $rotate := "" -}}
-{{- $resampleFilter := "" -}}
-{{- $hint := "" -}}
-{{- $anchor := "" -}}
-{{- $sizes := "" -}}
-{{- $class := "" -}}
+{{ $params := (dict "page" .Page) }}
+
 {{- /* check for named params in shortcode */ -}}
 {{- if .IsNamedParams -}}
-  {{- with (.Get "src") -}}
-    {{- $src = .}}
-  {{- end -}}
-  {{- with (.Get "alt") -}}
-    {{- $alt = .}}
-  {{- end -}}
-  {{- with (.Get "title") -}}
-    {{- $title = .}}
-  {{- end -}}
-  {{- with (.Get "width") -}}
-    {{- $width = . | int }}
-  {{- end -}}
+  {{ $params = merge $params .Params }}
+
   {{- with (.Get "widths") -}}
-    {{- $splitWidths := split . "," -}}
-    {{- range $splitWidths }}
-      {{ $widths = $widths | append ( . | int )}}
+    {{- $widths := split . "," -}}
+    {{- $widths = apply $widths "int" "." }}
+    {{- $params = merge $params (dict "widths" $widths) }}
+  {{ else }}
+    {{/* if no widths provided, provide shortcodeWidths (if configured) */}}
+    {{ with site.Params.image.shortcodeWidths }}
+      {{- $params = merge $params (dict "widths" . ) }}
     {{- end -}}
   {{- end -}}
+
   {{- with (.Get "densities") -}}
-    {{- $splitDensities := split . "," -}}
-    {{- range $splitDensities }}
-      {{ $densities = $densities | append ( . | int )}}
-    {{- end -}}
+    {{- $densities := split . "," -}}
+    {{- $densities = apply $densities "int" "." }}
+    {{- $params = merge $params (dict "widths" $densities) }}
   {{- end -}}
   {{- with (.Get "fillRatio") -}}
-    {{- $splitFillRatio = split . "," -}}
-    {{- range $splitFillRatio }}
-      {{ $fillRatio = $fillRatio | append ( . | int )}}
-    {{- end -}}
+    {{- $fillRatio = split . "," -}}
+    {{- $fillRatio = apply $fillRatio "int" "." }}
+    {{- $params = merge $params (dict "widths" $fillRatio) }}
   {{- end -}}
-  {{- with (.Get "quality") -}}
-    {{- $quality = .}}
-  {{- end -}}
-  {{- with (.Get "rotate") -}}
-    {{- $rotate = .}}
-  {{- end -}}
-    {{- with (.Get "resampleFilter") -}}
-    {{- $resampleFilter = .}}
-    {{- end -}}
-  {{- with (.Get "hint") -}}
-    {{- $hint = .}}
-  {{- end -}}
-  {{- with (.Get "anchor") -}}
-    {{- $anchor = .}}
-  {{- end -}}
-    {{- with (.Get "sizes") -}}
-  {{- $sizes = .}}
-    {{- end -}}
-  {{- with (.Get "class") -}}
-    {{- $class = .}}
-  {{- end -}}
+
+  {{ if not (.Get "src") }}
+    {{ errorf "The %q shortcode requires the "src" named parameter. See %s" .Name .Position }}
+  {{ end }}
 {{- else -}}
 {{- /* if only 1 un named param in shortcode */ -}}
   {{- with (.Get 0) -}}
-    {{- $src = .}}
+  {{ $params = merge $params (dict "src" .) }}
   {{- end -}}
+  {{ if ge (len .Params) 2 }}
+    {{ errorf "If using positional parameters, only 1 parameter can be provided (src)" }}
+  {{ end }}
 {{- end -}}
-{{- /* assign variables to dict */ -}}
-{{- $dict := (dict
-  "page" .Page 
-  "src" $src
-  "title" $title
-  "alt" $alt
-  "width" $width
-  "widths" $widths
-  "densities" $densities
-  "fillRatio" $fillRatio
-  "quality" $quality
-  "rotate" $rotate
-  "resampleFilter" $resampleFilter
-  "hint" $hint
-  "anchor" $anchor
-  "sizes" $sizes
-  "class" $class
-) }}
-{{ partial "exercises/image" $dict }}
+
+{{ if eq (.Get "figure") true }}
+{{ partial "figure" $params }}
+{{ else }}
+{{ partial "image" $params }}
+{{ end }}

@@ -1,6 +1,9 @@
 image:
   widths: [600, 900, 1300]
+  # shortcodeWidths: [600, 900, 1300]
+  # renderHookWidths: [600, 900, 1300]
   densities: [1,2]
   class: img-fluid
   figureClass: figure
   lazysizes: true
+  renderHook: true # set to false to disable included markdown image render hook

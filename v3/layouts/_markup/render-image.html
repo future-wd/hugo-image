@@ -1,0 +1,11 @@
+{{- if site.Params.image.render-hook -}}
+{{- $widths := site.Params.image.renderHookWidths | default site.Params.image.widths -}}
+{{- $config := (dict 
+  "page" .Page 
+  "src" .Destination 
+  "alt" .PlainText 
+  "title" .Title 
+  "widths" $widths
+  ) -}}
+{{ partial "image" $config }}
+{{- end -}} 
