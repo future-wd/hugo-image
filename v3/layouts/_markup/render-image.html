@@ -1,5 +1,5 @@
 {{- if site.Params.image.render-hook -}}
-{{- $widths := site.Params.image.renderHookWidths | default site.Params.image.widths -}}
+{{- $widths := site.Params.image.renderHookWidths | default (site.params.image.shortcodeWidths | default site.Params.image.widths ) -}}
 {{- $config := (dict 
   "page" .Page 
   "src" .Destination 
