@@ -30,6 +30,8 @@ FIX
 
 The following example shows all configuration options. The only required option is "src".
 
+Fixed/responsive width images and page/global resource images have been merged into two examples for brevity. The options are interchangable.
+
 // style comments have been used for clarity
 
 ### Fixed width, page resource
