@@ -145,18 +145,21 @@
 {{- if site.Params.image.lazysizes -}}
   {{- $class = print $class " " "lazyload" -}}
 {{- end -}}
+{{- if .figure }}
+{{- $class = print $class " " site.Params.image.figureImageClass -}}
+{{- end -}}
 {{- /* -------------------- */ -}}
 {{- /* generate picture tag */ -}}
 <picture>
   <source 
-    {{ if eq .loading "auto" }}
+    {{ if or (eq .loading "auto") (eq .lazysizes false) }}
     srcset="{{ $srcsetWebp }}" 
     {{ else }}
     data-srcset="{{ $srcsetWebp }}" 
     {{ end }}
     type="image/webp">
   <source 
-    {{ if eq .loading "auto" }}
+    {{ if or (eq .loading "auto") (eq .lazysizes false) }}
     srcset="{{ $srcsetOrig }}" 
     {{ else }}
     data-srcset="{{ $srcsetOrig }}" 
@@ -164,8 +167,10 @@
     type="{{ $src.MediaType }}">
   <img 
     {{ if eq .loading "auto" }}
-    src="{{ $src.RelPermalink }}" 
     loading="auto"
+    {{ else }}
+    {{ if or (eq .loading "auto") (eq .lazysizes false) }}
+    src="{{ $src.RelPermalink }}"
     {{ else }}
     data-src="{{ $src.RelPermalink }}" 
     {{ end }}
