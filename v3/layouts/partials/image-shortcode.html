@@ -9,7 +9,8 @@
     {{- $widths = apply $widths "int" "." }}
     {{- $params = merge $params (dict "widths" $widths) }}
   {{ else }}
-    {{/* if no widths provided, provide shortcodeWidths (if configured) */}}
+    {{/* if no widths provided, provide shortcodeWidths (if configured)
+      else the image partial has its own default widths */}}
     {{ with site.Params.image.shortcodeWidths }}
       {{- $params = merge $params (dict "widths" . ) }}
     {{- end -}}
