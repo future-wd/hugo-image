@@ -9,4 +9,4 @@ image:
   figcaptionClass: figure-caption # default figcaption class
   figureImageClass: figure-img # default figure image class (appended to image class)
   lazysizes: true # enable integration of the lazysizes js library
-  renderHook: true # set to false to disable included markdown image render hook
+  renderHook: false # set to false to disable included markdown image render hook
