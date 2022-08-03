@@ -174,5 +174,7 @@
     height="{{ $src.Height }}" 
     width="{{ $src.Width }}"
     class="{{ $class }}"
-    sizes="{{ $sizes }}">
+    {{ if not .width }}
+    sizes="{{ $sizes }}"
+    {{ end }}>
 </picture>
