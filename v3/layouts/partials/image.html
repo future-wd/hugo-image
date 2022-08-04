@@ -168,7 +168,7 @@
   <img 
     {{ if eq .loading "auto" }}
     loading="auto"
-    {{ else }}
+    {{ end }}
     {{ if or (eq .loading "auto") (eq .lazysizes false) }}
     src="{{ $src.RelPermalink }}"
     {{ else }}
