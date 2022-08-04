@@ -1,4 +1,8 @@
-{{ $params := (dict "page" .Page) }}
+{{ $params := dict }}
+{{/* don't pass .Page context if global resource requested */}}
+{{ if ne (.Get "global") "true" }}
+  {{ $params = merge $params (dict "page" .Page) }}
+{{ end }}
 
 {{- /* check for named params in shortcode */ -}}
 {{- if .IsNamedParams -}}

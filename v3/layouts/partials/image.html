@@ -1,6 +1,6 @@
 {{- /* set variables */ -}}
 {{- $img := "" }}
-{{- if and .page (not .global) -}}
+{{- if .page -}}
   {{- /* page resource */ -}}
   {{- $img = .page.Resources.GetMatch .src -}}
 {{- else -}}
