@@ -28,7 +28,7 @@
   {{- end -}}
 
   {{ if not (.Get "src") }}
-    {{ errorf "The %q shortcode requires the "src" named parameter. See %s" .Name .Position }}
+    {{ errorf "The %q shortcode requires the 'src' named parameter. See %s" .Name .Position }}
   {{ end }}
 {{- else -}}
 {{- /* if only 1 un named param in shortcode */ -}}
