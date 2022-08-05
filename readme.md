@@ -10,16 +10,20 @@ All configuration items have been provided in the module. To override simply cop
 ```yaml
 params:
   image:
-    widths: [600, 900, 1300]
-    # shortcodeWidths: [600, 900, 1300] # custom widths for shortcode use in markdown files
-    # renderHookWidths: [600, 900, 1300] # custom widths for render hook use in markdown files
+    widths: [600, 900, 1300] # widths to generate if widths not specified
+    # shortcodeWidths: [600, 900, 1300] # custom widths for shortcode use in markdown files. If unset defaults to widths
+    # renderHookWidths: [600, 900, 1300] # custom widths for render hook use in markdown files. If unset defaults to shortcode widths
     densities: [1,2] # densities which are output when an image width is specified
+    formats: [original, webp] # set output formats. options are `default`, `bmp`, `gif`, `jpeg`, `jpg`, `png`, `tif`, `tiff`, and `webp`
+    # outputFormats: [original, webp] # feature to be added
     class: img-fluid # default image class if no class is specified
     figureClass: figure # default figure class
     figcaptionClass: figure-caption # default figcaption class
     figureImageClass: figure-img # default figure image class (appended to image class)
     lazysizes: true # enable integration of the lazysizes js library
-    renderHook: true # set to false to disable included markdown image render hook
+    renderHook: false # set to false to disable included markdown image render hook
+                      # override by setting imageRenderHook: true/false in front matter
+
 ```
 
 ## Hugo image processing configuration options
