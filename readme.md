@@ -1,5 +1,9 @@
 # Hugo responsive images
 
+# ARCHIVED 
+
+see <github.com/future-wd/hugo-responsive-images> for replacement module
+
 ## This readme is for version 3
 ## [click here for version 2](https://github.com/future-wd/hugo-image/tree/master/v2)
 
